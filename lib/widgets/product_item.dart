@@ -1,0 +1,141 @@
+import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:flutter/material.dart';
+
+class ProductItem extends StatelessWidget {
+  const ProductItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 216,
+      width: 160,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Expanded(child: Container()),
+              Image.asset('assets/images/iphone.png'),
+              Positioned(
+                top: 0,
+                right: 10,
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Image.asset('assets/images/active_fav_product.png'),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Text(
+                        '3%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'SB',
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10, bottom: 10),
+                child: const Text(
+                  'آیفون 13 پرو مکس',
+                  style: TextStyle(fontFamily: 'SM', fontSize: 14),
+                ),
+              ),
+
+              Container(
+                height: 53,
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 25,
+                      spreadRadius: -12,
+                      color: CustomColors.blue,
+                      offset: Offset(0, 15),
+                    ),
+                  ],
+                  color: CustomColors.blue,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'تومان',
+                        style: TextStyle(
+                          fontFamily: 'SM',
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            '15,000,000',
+                            style: TextStyle(
+                              color: Colors.white,
+                              decoration: TextDecoration.lineThrough,
+                              fontFamily: 'SM',
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            '12,000,000',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'SM',
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Image.asset(
+                        'assets/images/icon_right_arrow_cricle.png',
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
