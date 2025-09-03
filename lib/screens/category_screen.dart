@@ -1,0 +1,73 @@
+import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:flutter/material.dart';
+
+class CategoryScreen extends StatelessWidget {
+  const CategoryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CustomColors.backgroundScreenColor,
+
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
+                child: Container(
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/icon_apple_blue.png',
+                          width: 24,
+                          height: 24,
+                        ),
+                        Expanded(
+                          child: Text(
+                            'دسته بندی',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: CustomColors.blue,
+                              fontFamily: 'SB',
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 44),
+              sliver: SliverGrid(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  );
+                }, childCount: 10),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 2,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
