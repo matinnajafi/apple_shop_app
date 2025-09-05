@@ -36,7 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   smooth_page_indicator: ^1.2.1
   dotted_line: ^3.2.3
-  
+  dartz: ^0.10.1
+  dio: ^5.9.0
+  get_it: ^8.2.0
+  shared_preferences: ^2.5.3
+  bloc: ^9.0.0
+  flutter_bloc: ^9.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
