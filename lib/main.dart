@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:apple_shop_app/bloc/category/category_bloc.dart';
+import 'package:apple_shop_app/bloc/home/home_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/card_screen.dart';
@@ -149,7 +150,8 @@ class _MyAppState extends State<MyApp> {
         create: (context) => CategoryBloc(),
         child: CategoryScreen(),
       ),
-      HomeScreen(),
+      // provide bloc for HomeScreen
+      BlocProvider(create: (context) => HomeBloc(), child: HomeScreen()),
     ];
   }
 }
