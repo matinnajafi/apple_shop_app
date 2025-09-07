@@ -1,12 +1,11 @@
 import 'dart:ui';
 
-import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
+import 'package:apple_shop_app/bloc/category/category_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/card_screen.dart';
 import 'package:apple_shop_app/screens/category_screen.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
-import 'package:apple_shop_app/screens/login_screen.dart';
 import 'package:apple_shop_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,9 +30,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: BlocProvider(
-          create: (context) => AuthBloc(),
-          child: LoginScreen(),
+        body: IndexedStack(
+          index: selectedIndexbottomNavigationBar,
+          children: getScreens(),
         ),
         bottomNavigationBar: ClipRRect(
           child: BackdropFilter(
@@ -145,7 +144,11 @@ class _MyAppState extends State<MyApp> {
     return <Widget>[
       ProfileScreen(),
       CardScreen(),
-      CategoryScreen(),
+      // provide bloc for CategoryScreen
+      BlocProvider(
+        create: (context) => CategoryBloc(),
+        child: CategoryScreen(),
+      ),
       HomeScreen(),
     ];
   }
