@@ -33,10 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             return CustomScrollView(
               slivers: [
-                if (state is HomeLoadingState) ...[
-                  SliverToBoxAdapter(child: CircularProgressIndicator()),
-                ],
                 _getAppbar(),
+                if (state is HomeLoadingState) ...[
+                  SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.blue),
+                    ),
+                  ),
+                ],
                 if (state is HomeGetResponseState) ...[
                   state.bannerList.fold(
                     (exceptionMessage) {
@@ -48,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
                 SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-                SliverToBoxAdapter(child: RowTitle()),
+                _getCategoryListTitle(),
                 if (state is HomeGetResponseState) ...[
                   state.categoryList.fold(
                     (exceptionMessage) {
@@ -59,12 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ],
-
-                SliverToBoxAdapter(child: RowTitle()),
+                _getBestSellerTitle(),
                 _getBestSellerProduct(),
-                SliverPadding(padding: EdgeInsets.only(top: 32)),
-                SliverToBoxAdapter(child: RowTitle()),
+                SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+                _getMostViewedTitle(),
                 _getMostViewedProduct(),
+                SliverPadding(padding: EdgeInsets.only(bottom: 16)),
               ],
             );
           },
@@ -74,9 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ignore: must_be_immutable
+// ignore: must_be_immutable, camel_case_types
 class _getBanners extends StatelessWidget {
   List<BannerImage> bannerList;
+  // ignore: unused_element_parameter
   _getBanners({super.key, required this.bannerList});
 
   @override
@@ -85,7 +90,9 @@ class _getBanners extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class _getMostViewedProduct extends StatelessWidget {
+  // ignore: unused_element_parameter
   const _getMostViewedProduct({super.key});
 
   @override
@@ -111,7 +118,9 @@ class _getMostViewedProduct extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class _getBestSellerProduct extends StatelessWidget {
+  // ignore: unused_element_parameter
   const _getBestSellerProduct({super.key});
 
   @override
@@ -137,8 +146,10 @@ class _getBestSellerProduct extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable, camel_case_types
 class _getCategoryList extends StatelessWidget {
   List<Category> categoryList;
+  // ignore: unused_element_parameter
   _getCategoryList(this.categoryList, {super.key});
 
   @override
@@ -165,7 +176,9 @@ class _getCategoryList extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class _getAppbar extends StatelessWidget {
+  // ignore: unused_element_parameter
   const _getAppbar({super.key});
 
   @override
@@ -184,14 +197,15 @@ class _getAppbar extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'assets/images/icon_apple_blue.png',
+                  'assets/images/icon_search.png',
                   width: 24,
                   height: 24,
                 ),
+                SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'جستوجوی محصولات',
-                    textAlign: TextAlign.end,
+                    textAlign: TextAlign.start,
                     style: TextStyle(
                       color: CustomColors.gery,
                       fontFamily: 'SB',
@@ -199,9 +213,8 @@ class _getAppbar extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
                 Image.asset(
-                  'assets/images/icon_search.png',
+                  'assets/images/icon_apple_blue.png',
                   width: 24,
                   height: 24,
                 ),
@@ -214,39 +227,117 @@ class _getAppbar extends StatelessWidget {
   }
 }
 
-class RowTitle extends StatelessWidget {
-  const RowTitle({super.key});
+// ignore: camel_case_types
+class _getBestSellerTitle extends StatelessWidget {
+  // ignore: unused_element_parameter
+  const _getBestSellerTitle({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 44, right: 44, bottom: 20),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/icon_left_category.png',
-            width: 24,
-            height: 24,
-          ),
-          SizedBox(width: 5),
-          Text(
-            'مشاهده همه',
-            style: TextStyle(
-              color: CustomColors.blue,
-              fontFamily: 'SB',
-              fontSize: 12,
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 44,
+          right: 44,
+          bottom: 16,
+          top: 12,
+        ),
+        child: Row(
+          children: [
+            Text(
+              'پرفروش ترین‌ها',
+              style: TextStyle(
+                color: CustomColors.gery,
+                fontFamily: 'SB',
+                fontSize: 12,
+              ),
             ),
-          ),
-          Spacer(),
-          Text(
-            'پرفروش ترین‌ها',
-            style: TextStyle(
-              color: CustomColors.gery,
-              fontFamily: 'SB',
-              fontSize: 12,
+            Spacer(),
+            Text(
+              'مشاهده همه',
+              style: TextStyle(
+                color: CustomColors.blue,
+                fontFamily: 'SB',
+                fontSize: 12,
+              ),
             ),
-          ),
-        ],
+            SizedBox(width: 5),
+            Image.asset(
+              'assets/images/icon_left_category.png',
+              width: 24,
+              height: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class _getMostViewedTitle extends StatelessWidget {
+  // ignore: unused_element_parameter
+  const _getMostViewedTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 44, right: 44, bottom: 16),
+        child: Row(
+          children: [
+            Text(
+              'پربازدید ترین‌ها',
+              style: TextStyle(
+                color: CustomColors.gery,
+                fontFamily: 'SB',
+                fontSize: 12,
+              ),
+            ),
+            Spacer(),
+            Text(
+              'مشاهده همه',
+              style: TextStyle(
+                color: CustomColors.blue,
+                fontFamily: 'SB',
+                fontSize: 12,
+              ),
+            ),
+            SizedBox(width: 5),
+            Image.asset(
+              'assets/images/icon_left_category.png',
+              width: 24,
+              height: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class _getCategoryListTitle extends StatelessWidget {
+  // ignore: unused_element_parameter
+  const _getCategoryListTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 44, right: 44, bottom: 20),
+        child: Row(
+          children: [
+            Text(
+              'دسته‌بندی‌ها',
+              style: TextStyle(
+                color: CustomColors.gery,
+                fontFamily: 'SB',
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

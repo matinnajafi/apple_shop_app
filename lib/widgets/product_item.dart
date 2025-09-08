@@ -58,7 +58,7 @@ class ProductItem extends StatelessWidget {
 
           const Spacer(),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 10, bottom: 10),
@@ -91,24 +91,21 @@ class ProductItem extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'تومان',
-                        style: TextStyle(
-                          fontFamily: 'SM',
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
+                      Image.asset(
+                        'assets/images/icon_right_arrow_cricle.png',
+                        height: 24,
                       ),
-                      const SizedBox(width: 5),
+                      const Spacer(),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: const [
                           Text(
                             '15,000,000',
                             style: TextStyle(
                               color: Colors.white,
                               decoration: TextDecoration.lineThrough,
+                              decorationThickness: 1.4,
                               fontFamily: 'SM',
                               fontSize: 12,
                             ),
@@ -123,10 +120,14 @@ class ProductItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      Image.asset(
-                        'assets/images/icon_right_arrow_cricle.png',
-                        height: 24,
+                      const SizedBox(width: 5),
+                      const Text(
+                        'تومان',
+                        style: TextStyle(
+                          fontFamily: 'SM',
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),

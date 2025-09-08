@@ -25,7 +25,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int selectedIndexbottomNavigationBar = 0;
+  int selectedIndexbottomNavigationBar =
+      3; // with index 3: Starting from the home page
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -150,8 +151,14 @@ class _MyAppState extends State<MyApp> {
         create: (context) => CategoryBloc(),
         child: CategoryScreen(),
       ),
-      // provide bloc for HomeScreen
-      BlocProvider(create: (context) => HomeBloc(), child: HomeScreen()),
+      Directionality(
+        textDirection: TextDirection.rtl,
+        // provide bloc for HomeScreen
+        child: BlocProvider(
+          create: (context) => HomeBloc(),
+          child: HomeScreen(),
+        ),
+      ),
     ];
   }
 }

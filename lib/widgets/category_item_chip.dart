@@ -2,6 +2,7 @@ import 'package:apple_shop_app/data/model/category.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CategoryItemChip extends StatelessWidget {
   Category category;
   CategoryItemChip(this.category, {super.key});
