@@ -3,6 +3,7 @@ import 'package:apple_shop_app/bloc/home/home_event.dart';
 import 'package:apple_shop_app/bloc/home/home_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/banner.dart';
+import 'package:apple_shop_app/data/model/category.dart';
 import 'package:apple_shop_app/widgets/banner_slider.dart';
 import 'package:apple_shop_app/widgets/category_item_chip.dart';
 import 'package:apple_shop_app/widgets/product_item.dart';
@@ -48,7 +49,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
                 SliverPadding(padding: EdgeInsets.only(bottom: 32)),
                 SliverToBoxAdapter(child: RowTitle()),
-                _getCategoryList(),
+                if (state is HomeGetResponseState) ...[
+                  state.categoryList.fold(
+                    (exceptionMessage) {
+                      return SliverToBoxAdapter(child: Text(exceptionMessage));
+                    },
+                    (categoryList) {
+                      return _getCategoryList(categoryList);
+                    },
+                  ),
+                ],
+
                 SliverToBoxAdapter(child: RowTitle()),
                 _getBestSellerProduct(),
                 SliverPadding(padding: EdgeInsets.only(top: 32)),
@@ -127,7 +138,8 @@ class _getBestSellerProduct extends StatelessWidget {
 }
 
 class _getCategoryList extends StatelessWidget {
-  const _getCategoryList({super.key});
+  List<Category> categoryList;
+  _getCategoryList(this.categoryList, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +151,11 @@ class _getCategoryList extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 44),
             child: ListView.builder(
+              physics: ScrollPhysics(parent: BouncingScrollPhysics()),
               scrollDirection: Axis.horizontal,
-              itemCount: 20,
+              itemCount: categoryList.length,
               itemBuilder: (context, index) {
-                return const CategoryItemChip();
+                return CategoryItemChip(categoryList[index]);
               },
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/widgets/category_item_chip.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -64,16 +63,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runSpacing: 20,
                 spacing: 14,
                 children: const [
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
-                  CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
+                  // CategoryItemChip(),
                 ],
               ),
             ),
