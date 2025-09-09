@@ -1,5 +1,4 @@
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 
 class ProductListScreen extends StatelessWidget {
@@ -51,7 +50,7 @@ class ProductListScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 44),
               sliver: SliverGrid(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return ProductItem();
+                  return Text('data'); // todo: for product items
                 }, childCount: 10),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisSpacing: 20,
