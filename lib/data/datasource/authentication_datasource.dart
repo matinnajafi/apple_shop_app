@@ -31,7 +31,7 @@ class AuthenticationRemote implements IAuthenticationDataSource {
         },
       );
       print(response.statusCode);
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(
         ex.response?.data['code'],
         ex.response?.data['message'],
@@ -52,7 +52,7 @@ class AuthenticationRemote implements IAuthenticationDataSource {
       if (response.statusCode == 200) {
         return response.data['token'];
       }
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');

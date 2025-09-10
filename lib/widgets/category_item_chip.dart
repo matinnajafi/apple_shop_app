@@ -39,12 +39,11 @@ class CategoryItemChip extends StatelessWidget {
               SizedBox(
                 height: 24,
                 width: 24,
-                child: CachedImage(imageUrl: category.icon),
+                child: Center(child: CachedImage(imageUrl: category.icon)),
               ),
             ],
           ),
-
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             category.title ?? 'محصول',
             style: TextStyle(fontFamily: 'SB', fontSize: 12),

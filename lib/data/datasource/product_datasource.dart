@@ -19,7 +19,7 @@ class ProductRemoteDatasource extends IProductDatasource {
       return (response.data['items'] as List)
           .map<Product>((jsonObject) => Product.fromMapJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(
         ex.response?.data['code'],
         ex.response?.data['message'],
@@ -40,7 +40,7 @@ class ProductRemoteDatasource extends IProductDatasource {
       return (response.data['items'] as List)
           .map<Product>((jsonObject) => Product.fromMapJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(
         ex.response?.data['code'],
         ex.response?.data['message'],
@@ -61,7 +61,7 @@ class ProductRemoteDatasource extends IProductDatasource {
       return (response.data['items'] as List)
           .map<Product>((jsonObject) => Product.fromMapJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(
         ex.response?.data['code'],
         ex.response?.data['message'],
