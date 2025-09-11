@@ -5,6 +5,7 @@ import 'package:apple_shop_app/bloc/product/product_event.dart';
 import 'package:apple_shop_app/bloc/product/product_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/productImage.dart';
+import 'package:apple_shop_app/data/model/variant_type.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return SafeArea(
             child: CustomScrollView(
               slivers: [
-                if (state is ProductLoadingState) ...{
+                if (state is ProductDetailLoadingState) ...{
                   SliverToBoxAdapter(
                     child: Center(
                       child: const SizedBox(
@@ -102,8 +103,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                   ),
-                  if (state is ProductResponseState) ...[
-                    state.getProductImage.fold(
+                  if (state is ProductDetailResponseState) ...[
+                    state.productImages.fold(
                       (exceptionMessage) {
                         return SliverToBoxAdapter(
                           child: Text(exceptionMessage),
@@ -114,58 +115,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ],
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 44,
-                        left: 44,
-                        top: 20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'انتخاب رنگ',
-                            style: TextStyle(fontFamily: 'SM', fontSize: 12),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 10),
-                                height: 26,
-                                width: 26,
-                                decoration: BoxDecoration(
-                                  color: CustomColors.red,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 10),
-                                height: 26,
-                                width: 26,
-                                decoration: BoxDecoration(
-                                  color: CustomColors.red,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 10),
-                                height: 26,
-                                width: 26,
-                                decoration: BoxDecoration(
-                                  color: CustomColors.red,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                  if (state is ProductDetailResponseState) ...[
+                    state.productVariant.fold(
+                      (exceptionMessage) {
+                        return SliverToBoxAdapter(
+                          child: Text(exceptionMessage),
+                        );
+                      },
+                      (productVarintList) {
+                        productVarintList.forEach((variant) {
+                          print(variant.variantType.title);
+                          for (var variant in variant.variantList) {
+                            print(variant.name);
+                          }
+                        });
+                        return SliverToBoxAdapter(child: Text('success'));
+                      },
                     ),
-                  ),
+                  ],
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -486,6 +453,63 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class getColorVariants extends StatelessWidget {
+  VariantType variantType;
+  getColorVariants(this.variantType, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 44, left: 44, top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              variantType.title!,
+              style: TextStyle(fontFamily: 'SM', fontSize: 12),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  height: 26,
+                  width: 26,
+                  decoration: BoxDecoration(
+                    color: CustomColors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  height: 26,
+                  width: 26,
+                  decoration: BoxDecoration(
+                    color: CustomColors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  height: 26,
+                  width: 26,
+                  decoration: BoxDecoration(
+                    color: CustomColors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

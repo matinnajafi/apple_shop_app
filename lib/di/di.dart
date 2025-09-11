@@ -34,8 +34,8 @@ Future<void> getItInit() async {
 
   locator.registerFactory<IBannerDatasource>(() => BannerRemoteDatasource());
   locator.registerFactory<IProductDatasource>(() => ProductRemoteDatasource());
-  locator.registerFactory<IProductDetailDatasource>(
-    () => ProductDetailRemoteDatasource(),
+  locator.registerFactory<IDetailProductDatasource>(
+    () => DetailProductRemoteDatasource(),
   );
 
   // repositories
@@ -43,7 +43,7 @@ Future<void> getItInit() async {
   locator.registerFactory<ICategoryRepository>(() => CategoryRepository());
   locator.registerFactory<IBannerRepository>(() => BannerRepository());
   locator.registerFactory<IProductRepository>(() => ProductRepository());
-  locator.registerFactory<IProductDetailRepository>(
-    () => ProductDetailRepository(),
+  locator.registerFactory<IDetailProductRepository>(
+    () => DetailProductRepository(),
   );
 }
