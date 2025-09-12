@@ -4,6 +4,7 @@ import 'package:apple_shop_app/bloc/product/product_bloc.dart';
 import 'package:apple_shop_app/bloc/product/product_event.dart';
 import 'package:apple_shop_app/bloc/product/product_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/data/model/product.dart';
 import 'package:apple_shop_app/data/model/productImage.dart';
 import 'package:apple_shop_app/data/model/product_variant.dart';
 import 'package:apple_shop_app/data/model/variant.dart';
@@ -13,7 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  Product product;
+  ProductDetailScreen(this.product, {super.key});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -22,7 +24,9 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
-    BlocProvider.of<ProductBloc>(context).add(ProductDetailInitialEvent());
+    BlocProvider.of<ProductBloc>(
+      context,
+    ).add(ProductDetailInitialEvent(widget.product.id));
     super.initState();
   }
 
@@ -113,7 +117,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         );
                       },
                       (productImageList) {
-                        return _getGalleryWidget(productImageList);
+                        return _getGalleryWidget(
+                          productImageList,
+                          widget.product.thumbnail,
+                        );
                       },
                     ),
                   ],
@@ -546,9 +553,14 @@ class _StorageVariantListState extends State<StorageVariantList> {
 // ignore: must_be_immutable, camel_case_types
 class _getGalleryWidget extends StatefulWidget {
   List<Productimage> productImageList;
+  String defaultProductThumbnail;
   int selectedItem = 0;
   // ignore: unused_element_parameter
-  _getGalleryWidget(this.productImageList, {super.key});
+  _getGalleryWidget(
+    this.productImageList,
+    this.defaultProductThumbnail, {
+    super.key,
+  });
 
   @override
   State<_getGalleryWidget> createState() => _getGalleryWidgetState();
@@ -598,12 +610,21 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
                     ),
                     const Spacer(),
                     SizedBox(
-                      height: double.infinity,
-                      child: CachedImage(
-                        imageUrl:
-                            widget
-                                .productImageList[widget.selectedItem]
-                                .imageUrl,
+                      height: 200,
+                      width: 200,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: CachedImage(
+                            imageUrl:
+                                (widget.productImageList.isEmpty)
+                                    ? (widget.defaultProductThumbnail)
+                                    : (widget
+                                        .productImageList[widget.selectedItem]
+                                        .imageUrl),
+                          ),
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -617,46 +638,48 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
               ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: 70,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 44),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: ListView.builder(
-                    itemCount: widget.productImageList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            widget.selectedItem = index;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          padding: EdgeInsets.all(4),
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: CustomColors.gery,
-                              width: 1,
+            if (widget.productImageList.isNotEmpty) ...{
+              SizedBox(
+                height: 70,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 44),
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ListView.builder(
+                      itemCount: widget.productImageList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              widget.selectedItem = index;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            padding: EdgeInsets.all(4),
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CustomColors.gery,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            child: CachedImage(
+                              imageUrl: widget.productImageList[index].imageUrl,
+                              radius: 10,
+                            ),
                           ),
-                          child: CachedImage(
-                            imageUrl: widget.productImageList[index].imageUrl,
-                            radius: 10,
-                          ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+            },
           ],
         ),
       ),
