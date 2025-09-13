@@ -2,5 +2,8 @@ abstract class ProductEvent {}
 
 class ProductDetailInitialEvent extends ProductEvent {
   String productId;
-  ProductDetailInitialEvent(this.productId);
+  String categoryId;
+  String productName;
+
+  ProductDetailInitialEvent(this.productId, this.categoryId, this.productName);
 }

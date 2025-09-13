@@ -13,6 +13,7 @@ import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore: must_be_immutable
 class ProductDetailScreen extends StatefulWidget {
   Product product;
   ProductDetailScreen(this.product, {super.key});
@@ -24,9 +25,13 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
-    BlocProvider.of<ProductBloc>(
-      context,
-    ).add(ProductDetailInitialEvent(widget.product.id));
+    BlocProvider.of<ProductBloc>(context).add(
+      ProductDetailInitialEvent(
+        widget.product.id,
+        widget.product.categoryId,
+        widget.product.name,
+      ),
+    );
     super.initState();
   }
 
@@ -72,17 +77,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 width: 24,
                                 height: 24,
                               ),
-                              Expanded(
-                                child: const Text(
-                                  'آیفون',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: CustomColors.blue,
-                                    fontFamily: 'SB',
-                                    fontSize: 14,
-                                  ),
+                              if (state is ProductDetailResponseState) ...{
+                                state.productCategory.fold(
+                                  (exceptionMessage) {
+                                    return Expanded(
+                                      child: Text(
+                                        'جزئیات محصول',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: CustomColors.blue,
+                                          fontFamily: 'SB',
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  (productCategory) {
+                                    return Expanded(
+                                      child: Text(
+                                        productCategory.title ?? 'محصول',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: CustomColors.blue,
+                                          fontFamily: 'SB',
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
+                              },
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -99,16 +123,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: const Text(
-                        'آیفون 14 پرو مکس',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontFamily: 'SB', fontSize: 16),
-                      ),
+                  if (state is ProductDetailResponseState) ...{
+                    state.productName.fold(
+                      (exceptionMessage) {
+                        return SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Text(
+                              'محصول جدید',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'SB', fontSize: 16),
+                            ),
+                          ),
+                        );
+                      },
+                      (productName) {
+                        return SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Text(
+                              productName.name,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'SB', fontSize: 16),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                  },
                   if (state is ProductDetailResponseState) ...[
                     state.productImages.fold(
                       (exceptionMessage) {
@@ -559,6 +601,7 @@ class _getGalleryWidget extends StatefulWidget {
   _getGalleryWidget(
     this.productImageList,
     this.defaultProductThumbnail, {
+    // ignore: unused_element_parameter
     super.key,
   });
 
@@ -612,18 +655,16 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
                     SizedBox(
                       height: 200,
                       width: 200,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: CachedImage(
-                            imageUrl:
-                                (widget.productImageList.isEmpty)
-                                    ? (widget.defaultProductThumbnail)
-                                    : (widget
-                                        .productImageList[widget.selectedItem]
-                                        .imageUrl),
-                          ),
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: CachedImage(
+                          radius: 4.0,
+                          imageUrl:
+                              (widget.productImageList.isEmpty)
+                                  ? (widget.defaultProductThumbnail)
+                                  : (widget
+                                      .productImageList[widget.selectedItem]
+                                      .imageUrl),
                         ),
                       ),
                     ),
@@ -667,9 +708,13 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: CachedImage(
-                              imageUrl: widget.productImageList[index].imageUrl,
-                              radius: 10,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: CachedImage(
+                                imageUrl:
+                                    widget.productImageList[index].imageUrl,
+                                radius: 10,
+                              ),
                             ),
                           ),
                         );

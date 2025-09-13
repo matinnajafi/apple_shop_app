@@ -7,6 +7,7 @@ abstract class IProductDatasource {
   Future<List<Product>> getProducts();
   Future<List<Product>> getHotest();
   Future<List<Product>> getBestSeller();
+  Future<Product> getProductName(String productName);
 }
 
 class ProductRemoteDatasource extends IProductDatasource {
@@ -61,6 +62,25 @@ class ProductRemoteDatasource extends IProductDatasource {
       return (response.data['items'] as List)
           .map<Product>((jsonObject) => Product.fromMapJson(jsonObject))
           .toList();
+    } on DioException catch (ex) {
+      throw ApiException(
+        ex.response?.data['code'],
+        ex.response?.data['message'],
+      );
+    } catch (ex) {
+      throw ApiException(0, 'unknown error');
+    }
+  }
+
+  @override
+  Future<Product> getProductName(String productName) async {
+    try {
+      Map<String, String> qParams = {'filter': 'name="$productName"'};
+      var response = await _dio.get(
+        'collections/products/records',
+        queryParameters: qParams,
+      );
+      return Product.fromMapJson(response.data['items'][0]);
     } on DioException catch (ex) {
       throw ApiException(
         ex.response?.data['code'],

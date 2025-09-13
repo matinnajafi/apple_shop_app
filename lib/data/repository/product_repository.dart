@@ -8,6 +8,7 @@ abstract class IProductRepository {
   Future<Either<String, List<Product>>> getProducts();
   Future<Either<String, List<Product>>> getHotest();
   Future<Either<String, List<Product>>> getBestSeller();
+  Future<Either<String, Product>> getProductName(String productName);
 }
 
 class ProductRepository extends IProductRepository {
@@ -41,6 +42,18 @@ class ProductRepository extends IProductRepository {
   Future<Either<String, List<Product>>> getHotest() async {
     try {
       var response = await _datasource.getHotest();
+      return right(response);
+    } on ApiException catch (ex) {
+      return left(ex.message ?? 'خطایی در دریافت داده ها رخ داده!');
+    } catch (ex) {
+      return left('خطایی در دریافت داده ها رخ داده!');
+    }
+  }
+
+  @override
+  Future<Either<String, Product>> getProductName(String productName) async {
+    try {
+      var response = await _datasource.getProductName(productName);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطایی در دریافت داده ها رخ داده!');
