@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:apple_shop_app/bloc/product/product_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:apple_shop_app/bloc/product/product_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/product.dart';
 import 'package:apple_shop_app/data/model/productImage.dart';
+import 'package:apple_shop_app/data/model/product_property.dart';
 import 'package:apple_shop_app/data/model/product_variant.dart';
 import 'package:apple_shop_app/data/model/variant.dart';
 import 'package:apple_shop_app/data/model/variant_type.dart';
@@ -180,47 +182,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ],
-                  SliverToBoxAdapter(
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        left: 44,
-                        right: 44,
-                        top: 24,
-                      ),
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: CustomColors.gery, width: 1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/icon_left_category.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'مشاهده',
-                              style: TextStyle(
-                                fontFamily: 'SB',
-                                fontSize: 12,
-                                color: CustomColors.blue,
-                              ),
-                            ),
-                            const Spacer(),
-                            const Text(
-                              ': مشخصات فنی',
-                              style: TextStyle(fontFamily: 'SM'),
-                            ),
-                          ],
-                        ),
-                      ),
+                  if (state is ProductDetailResponseState) ...{
+                    state.productProperties.fold(
+                      (exceptionMessage) {
+                        return SliverToBoxAdapter(
+                          child: Text(exceptionMessage),
+                        );
+                      },
+                      (productProperyList) {
+                        return getProductProperties(productProperyList);
+                      },
                     ),
-                  ),
+                  },
                   getProductDescription(widget.product.description),
                   SliverToBoxAdapter(
                     child: Container(
@@ -362,7 +335,140 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-// ignore: must_be_immutable
+// ignore: must_be_immutable, camel_case_types
+class getProductProperties extends StatefulWidget {
+  List<ProductProperty> productPropertyList;
+  getProductProperties(this.productPropertyList, {super.key});
+
+  @override
+  State<getProductProperties> createState() => _getProductPropertiesState();
+}
+
+// ignore: camel_case_types
+class _getProductPropertiesState extends State<getProductProperties> {
+  bool _isVisible = false;
+  int _tapCount = 0; // To avoid displaying too much snack bar
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (widget.productPropertyList.isEmpty) {
+                setState(() {
+                  _isVisible = false;
+                });
+
+                // todo: this part is for show snackBar
+                _tapCount++;
+                if (_tapCount >= 6) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        '!برای این محصول مشخصاتی ثبت نشده',
+                        textAlign: TextAlign.right,
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
+                // todo: end
+              } else {
+                setState(() {
+                  _isVisible = !_isVisible;
+                });
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
+              height: 46,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: CustomColors.gery, width: 1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    // rotate left and bottom for arrow
+                    Transform.rotate(
+                      angle: _isVisible ? -(math.pi / 2) : 0,
+                      child: Image.asset(
+                        'assets/images/icon_left_category.png',
+                        width: 24,
+                        height: 24,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.arrow_forward, size: 50);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'مشاهده',
+                      style: TextStyle(
+                        fontFamily: 'SB',
+                        fontSize: 12,
+                        color: CustomColors.blue,
+                      ),
+                    ),
+                    const Spacer(),
+                    const Text(
+                      ': مشخصات فنی',
+                      style: TextStyle(fontFamily: 'SM'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: _isVisible,
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Container(
+                margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: CustomColors.gery, width: 1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: widget.productPropertyList.length,
+                    itemBuilder: (context, index) {
+                      var property = widget.productPropertyList[index];
+                      return Flexible(
+                        child: Text(
+                          '${property.title} : ${property.value}',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable, camel_case_types
 class getProductDescription extends StatefulWidget {
   String productDescription;
 
@@ -372,6 +478,7 @@ class getProductDescription extends StatefulWidget {
   State<getProductDescription> createState() => _getProductDescriptionState();
 }
 
+// ignore: camel_case_types
 class _getProductDescriptionState extends State<getProductDescription> {
   bool _isVisible = false;
 
@@ -398,10 +505,17 @@ class _getProductDescriptionState extends State<getProductDescription> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'assets/images/icon_left_category.png',
-                      width: 24,
-                      height: 24,
+                    // rotate left and bottom for arrow
+                    Transform.rotate(
+                      angle: _isVisible ? -(math.pi / 2) : 0,
+                      child: Image.asset(
+                        'assets/images/icon_left_category.png',
+                        width: 24,
+                        height: 24,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.arrow_forward, size: 50);
+                        },
+                      ),
                     ),
                     const SizedBox(width: 10),
                     const Text(
