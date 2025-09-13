@@ -13,7 +13,9 @@ abstract class IDetailProductRepository {
 
   Future<Either<String, List<VariantType>>> getVariantTypes();
 
-  Future<Either<String, List<ProductVarint>>> getProductVarinats();
+  Future<Either<String, List<ProductVarint>>> getProductVarinats(
+    String productId,
+  );
   Future<Either<String, Category>> getProductCategory(String categoryId);
 }
 
@@ -43,9 +45,11 @@ class DetailProductRepository extends IDetailProductRepository {
   }
 
   @override
-  Future<Either<String, List<ProductVarint>>> getProductVarinats() async {
+  Future<Either<String, List<ProductVarint>>> getProductVarinats(
+    String productId,
+  ) async {
     try {
-      var response = await _datasource.getProductVariants();
+      var response = await _datasource.getProductVariants(productId);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطا محتوای متنی ندارد');
