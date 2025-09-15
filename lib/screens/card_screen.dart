@@ -1,4 +1,5 @@
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/util/extentions/string_extentions.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class CardScreen extends StatelessWidget {
           alignment: AlignmentDirectional.bottomCenter,
           children: [
             CustomScrollView(
+              physics: BouncingScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
@@ -101,6 +103,14 @@ class CardItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: CustomColors.gery,
+            blurRadius: 12.0,
+            spreadRadius: -6.0,
+            offset: Offset(2.0, 4.0),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -116,8 +126,20 @@ class CardItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('data'),
-                        Text('data'),
+                        const Text(
+                          'آیفون 13 پرو مکس',
+                          style: TextStyle(fontSize: 16, fontFamily: 'SB'),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'گارانتی 18 ماهه الماس رایان',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'SM',
+                            color: CustomColors.gery,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -142,19 +164,69 @@ class CardItem extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text('تومان'),
-                            Text('12,000,000'),
+                            const SizedBox(width: 4),
+                            const Text(
+                              'تومان',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'SM',
+                                color: CustomColors.gery,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Text(
+                              '12,000,000',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'SM',
+                                color: CustomColors.gery,
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         Wrap(
+                          spacing: 8,
+                          runSpacing: 6,
                           alignment: WrapAlignment.end,
                           children: [
-                            optionCheap(),
-                            optionCheap(),
-                            optionCheap(),
-                            optionCheap(),
-                            optionCheap(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: CustomColors.red.withOpacity(0.6),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'حذف',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'SM',
+                                        color: CustomColors.red,
+                                      ),
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Image.asset(
+                                      'assets/images/icon_trash.png',
+                                      scale: 1.1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            optionCheap('آبی', color: '3B5EDF'),
+                            optionCheap('256 گیگابایت'),
                           ],
                         ),
                       ],
@@ -174,7 +246,7 @@ class CardItem extends StatelessWidget {
               lineThickness: 1.0,
               dashLength: 6.0,
               dashGapLength: 3.0,
-              dashColor: CustomColors.gery.withOpacity(0.2),
+              dashColor: CustomColors.gery.withOpacity(0.5),
               dashGapColor: Colors.transparent,
             ),
           ),
@@ -182,7 +254,17 @@ class CardItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('تومان'), SizedBox(width: 5), Text('12,450,000')],
+              children: [
+                const Text(
+                  'تومان',
+                  style: TextStyle(fontFamily: 'SB', fontSize: 16),
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  '12,450,000',
+                  style: TextStyle(fontFamily: 'SB', fontSize: 16),
+                ),
+              ],
             ),
           ),
         ],
@@ -191,8 +273,11 @@ class CardItem extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable, camel_case_types
 class optionCheap extends StatelessWidget {
-  const optionCheap({super.key});
+  String? color;
+  String title;
+  optionCheap(this.title, {this.color, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -200,16 +285,29 @@ class optionCheap extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: CustomColors.gery.withOpacity(0.4), width: 1),
+        border: Border.all(color: CustomColors.gery.withOpacity(0.6), width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/images/icon_options.png'),
-            const SizedBox(width: 5),
-            const Text('256 GB'),
+            if (color != null) ...{
+              Container(
+                height: 14,
+                width: 14,
+                margin: const EdgeInsets.only(right: 4),
+                decoration: BoxDecoration(
+                  color: color.parseToColor(),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            },
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12, fontFamily: 'SM'),
+              textDirection: TextDirection.rtl,
+            ),
           ],
         ),
       ),

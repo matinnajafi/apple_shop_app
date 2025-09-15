@@ -1,6 +1,7 @@
 import 'package:apple_shop_app/bloc/categoryProduct/category_product_bloc.dart';
 import 'package:apple_shop_app/data/model/category.dart';
 import 'package:apple_shop_app/screens/product_list_screen.dart';
+import 'package:apple_shop_app/util/extentions/string_extentions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +13,6 @@ class CategoryItemChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String categoryColor = '0xff${category.color}';
-    int hexColor = int.parse(categoryColor);
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: GestureDetector(
@@ -37,7 +36,7 @@ class CategoryItemChip extends StatelessWidget {
                   height: 56,
                   width: 56,
                   decoration: ShapeDecoration(
-                    color: Color(hexColor),
+                    color: category.color.parseToColor(), // Use ColorExtention
                     shape: ContinuousRectangleBorder(
                       borderRadius: BorderRadius.circular(44),
                     ),
@@ -45,7 +44,8 @@ class CategoryItemChip extends StatelessWidget {
                       BoxShadow(
                         blurRadius: 25,
                         spreadRadius: -12,
-                        color: Color(hexColor),
+                        color:
+                            category.color.parseToColor(), // Use ColorExtention
                         offset: Offset(0, 15),
                       ),
                     ],
