@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:apple_shop_app/bloc/category/category_bloc.dart';
 import 'package:apple_shop_app/bloc/home/home_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/card_screen.dart';
 import 'package:apple_shop_app/screens/category_screen.dart';
@@ -10,10 +11,14 @@ import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await getItInit();
+  await Hive.initFlutter();
+  Hive.registerAdapter(BasketItemAdapter());
+  await Hive.openBox<BasketItem>('BasketBox');
   runApp(const MyApp());
 }
 

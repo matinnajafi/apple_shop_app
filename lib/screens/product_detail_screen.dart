@@ -321,7 +321,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [PriceTagButton(), AddButtonToBasket()],
+                        children: [
+                          PriceTagButton(),
+                          AddButtonToBasket(widget.product),
+                        ],
                       ),
                     ),
                   ),
@@ -893,8 +896,10 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
   }
 }
 
+// ignore: must_be_immutable
 class AddButtonToBasket extends StatelessWidget {
-  const AddButtonToBasket({super.key});
+  Product product;
+  AddButtonToBasket(this.product, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -913,16 +918,24 @@ class AddButtonToBasket extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: SizedBox(
-              height: 53,
-              width: 160,
-              child: Center(
-                child: Text(
-                  'افزودن سبد خرید',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'SB',
+            child: GestureDetector(
+              onTap: () {
+                // event for add product to shopping basket (in card screen)
+                context.read<ProductBloc>().add(
+                  AddProductToBasketEvent(product),
+                );
+              },
+              child: SizedBox(
+                height: 53,
+                width: 160,
+                child: Center(
+                  child: Text(
+                    'افزودن سبد خرید',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'SB',
+                    ),
                   ),
                 ),
               ),

@@ -1,5 +1,7 @@
 import 'package:apple_shop_app/bloc/product/product_event.dart';
 import 'package:apple_shop_app/bloc/product/product_state.dart';
+import 'package:apple_shop_app/data/model/basket_item.dart';
+import 'package:apple_shop_app/data/repository/basket_repository.dart';
 import 'package:apple_shop_app/data/repository/product_detail_repository.dart';
 import 'package:apple_shop_app/data/repository/product_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -9,6 +11,7 @@ import '../../di/di.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final IDetailProductRepository _productDetailRepository = locator.get();
   final IProductRepository _productRepository = locator.get();
+  final IBasketRepository _basketRepository = locator.get();
 
   ProductBloc() : super(ProductInitState()) {
     on<ProductDetailInitialEvent>((event, emit) async {
@@ -42,6 +45,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           productProperties,
         ),
       );
+    });
+
+    on<AddProductToBasketEvent>((event, emit) async {
+      var basketItem = BasketItem(
+        event.product.id,
+        event.product.collectionId,
+        event.product.thumbnail,
+        event.product.discountPrice,
+        event.product.price,
+        event.product.name,
+        event.product.categoryId,
+      );
+      _basketRepository.addProductToBasket(basketItem);
     });
   }
 }

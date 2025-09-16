@@ -1,10 +1,16 @@
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/util/extentions/string_extentions.dart';
+import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+// ignore: must_be_immutable
 class CardScreen extends StatelessWidget {
-  const CardScreen({super.key});
+  var box = Hive.box<BasketItem>('BasketBox');
+
+  CardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +60,8 @@ class CardScreen extends StatelessWidget {
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    return CardItem();
-                  }, childCount: 10),
+                    return CardItem(box.values.toList()[index]);
+                  }, childCount: box.values.length),
                 ),
                 SliverPadding(padding: EdgeInsets.only(bottom: 60)),
               ],
@@ -91,8 +97,10 @@ class CardScreen extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class CardItem extends StatelessWidget {
-  const CardItem({super.key});
+  BasketItem basketItem;
+  CardItem(this.basketItem, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +134,8 @@ class CardItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'آیفون 13 پرو مکس',
+                        Text(
+                          basketItem.name,
                           style: TextStyle(fontSize: 16, fontFamily: 'SB'),
                         ),
                         const SizedBox(height: 2),
@@ -174,8 +182,8 @@ class CardItem extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 4),
-                            const Text(
-                              '12,000,000',
+                            Text(
+                              basketItem.realPrice.toString(),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'SM',
@@ -234,8 +242,15 @@ class CardItem extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Image.asset('assets/images/iphone.png'),
+                  padding: EdgeInsets.only(right: 20),
+                  child: SizedBox(
+                    height: 104,
+                    width: 75,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: CachedImage(imageUrl: basketItem.thumbnail),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -260,8 +275,8 @@ class CardItem extends StatelessWidget {
                   style: TextStyle(fontFamily: 'SB', fontSize: 16),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '12,450,000',
+                Text(
+                  basketItem.realPrice.toString(),
                   style: TextStyle(fontFamily: 'SB', fontSize: 16),
                 ),
               ],
