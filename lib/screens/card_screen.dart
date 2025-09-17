@@ -1,9 +1,12 @@
+import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop_app/bloc/basket/basket_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/util/extentions/string_extentions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
 // ignore: must_be_immutable
@@ -17,80 +20,106 @@ class CardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
-                    child: Container(
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+        child: BlocBuilder<BasketBloc, BasketState>(
+          builder: (context, state) {
+            return Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/icon_apple_blue.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'سبد خرید',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: CustomColors.blue,
-                                  fontFamily: 'SB',
-                                  fontSize: 14,
+                        padding: EdgeInsets.only(
+                          left: 44,
+                          right: 44,
+                          bottom: 32,
+                        ),
+                        child: Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/icon_apple_blue.png',
+                                  width: 24,
+                                  height: 24,
                                 ),
-                              ),
+                                Expanded(
+                                  child: Text(
+                                    'سبد خرید',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: CustomColors.blue,
+                                      fontFamily: 'SB',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (state is BasketDataFetchedState) ...{
+                      state.basketItemList.fold(
+                        (exceptionMessage) {
+                          return SliverToBoxAdapter(
+                            child: Text(exceptionMessage),
+                          );
+                        },
+                        (basketItemList) {
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              return CardItem(basketItemList[index]);
+                            }, childCount: basketItemList.length),
+                          );
+                        },
+                      ),
+                    },
+                    SliverPadding(padding: EdgeInsets.only(bottom: 60)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 44,
+                    left: 44,
+                    bottom: 10,
+                  ),
+                  child: SizedBox(
+                    height: 53,
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        'ادامه فرایند خرید',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'SM',
+                          fontSize: 18,
                         ),
                       ),
                     ),
                   ),
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return CardItem(box.values.toList()[index]);
-                  }, childCount: box.values.length),
-                ),
-                SliverPadding(padding: EdgeInsets.only(bottom: 60)),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 44, left: 44, bottom: 10),
-              child: SizedBox(
-                height: 53,
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomColors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    'ادامه فرایند خرید',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'SM',
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

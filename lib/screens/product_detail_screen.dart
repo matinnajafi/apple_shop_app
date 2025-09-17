@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop_app/bloc/basket/basket_event.dart';
 import 'package:apple_shop_app/bloc/product/product_bloc.dart';
 import 'package:apple_shop_app/bloc/product/product_event.dart';
 import 'package:apple_shop_app/bloc/product/product_state.dart';
@@ -15,10 +17,9 @@ import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
 class ProductDetailScreen extends StatefulWidget {
-  Product product;
-  ProductDetailScreen(this.product, {super.key});
+  final Product product;
+  const ProductDetailScreen(this.product, {super.key});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -26,16 +27,28 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
-  void initState() {
-    BlocProvider.of<ProductBloc>(context).add(
-      ProductDetailInitialEvent(
-        widget.product.id,
-        widget.product.categoryId,
-        widget.product.name,
-      ),
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final bloc = ProductBloc();
+        bloc.add(
+          ProductDetailInitialEvent(
+            widget.product.id,
+            widget.product.categoryId,
+            widget.product.name,
+          ),
+        );
+        return bloc;
+      },
+      child: DetailsContentWidget(parentWidget: widget),
     );
-    super.initState();
   }
+}
+
+class DetailsContentWidget extends StatelessWidget {
+  const DetailsContentWidget({super.key, required this.parentWidget});
+
+  final ProductDetailScreen parentWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +176,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       (productImageList) {
                         return _getGalleryWidget(
                           productImageList,
-                          widget.product.thumbnail,
+                          parentWidget.product.thumbnail,
                         );
                       },
                     ),
@@ -194,7 +207,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   },
-                  getProductDescription(widget.product.description),
+                  getProductDescription(parentWidget.product.description),
                   SliverToBoxAdapter(
                     child: Container(
                       margin: const EdgeInsets.only(
@@ -323,7 +336,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           PriceTagButton(),
-                          AddButtonToBasket(widget.product),
+                          AddButtonToBasket(parentWidget.product),
                         ],
                       ),
                     ),
@@ -924,6 +937,8 @@ class AddButtonToBasket extends StatelessWidget {
                 context.read<ProductBloc>().add(
                   AddProductToBasketEvent(product),
                 );
+                // event for update card screen
+                context.read<BasketBloc>().add(BasketFetchFromHiveEvent());
               },
               child: SizedBox(
                 height: 53,

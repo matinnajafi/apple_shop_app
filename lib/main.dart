@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop_app/bloc/basket/basket_event.dart';
 import 'package:apple_shop_app/bloc/category/category_bloc.dart';
 import 'package:apple_shop_app/bloc/home/home_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
@@ -15,10 +17,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await getItInit();
   await Hive.initFlutter();
   Hive.registerAdapter(BasketItemAdapter());
-  await Hive.openBox<BasketItem>('BasketBox');
+  await Hive.openBox<BasketItem>(
+    'BasketBox',
+  ); // basket Hive should be Initialized before getItInit(), cause basket bloc have dependencies with this
+  await getItInit();
   runApp(const MyApp());
 }
 
@@ -150,7 +154,15 @@ class _MyAppState extends State<MyApp> {
   List<Widget> getScreens() {
     return <Widget>[
       ProfileScreen(),
-      CardScreen(),
+      // provide Basket Bloc for CardScreen
+      BlocProvider(
+        create: (context) {
+          var bloc = locator.get<BasketBloc>();
+          bloc.add(BasketFetchFromHiveEvent());
+          return bloc;
+        },
+        child: CardScreen(),
+      ),
       // provide bloc for CategoryScreen
       BlocProvider(
         create: (context) => CategoryBloc(),

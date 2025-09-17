@@ -1,6 +1,7 @@
-import 'package:apple_shop_app/bloc/product/product_bloc.dart';
+import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/product.dart';
+import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/product_detail_screen.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,13 @@ class ProductItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder:
-                (context) => BlocProvider(
-                  create: (context) => ProductBloc(),
-                  child: ProductDetailScreen(product),
-                ),
+            builder: (context) {
+              // provide BasketBloc for ProductDetailScreen
+              return BlocProvider<BasketBloc>.value(
+                value: locator.get<BasketBloc>(),
+                child: ProductDetailScreen(product),
+              );
+            },
           ),
         );
       },

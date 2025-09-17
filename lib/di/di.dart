@@ -1,3 +1,4 @@
+import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
 import 'package:apple_shop_app/data/datasource/authentication_datasource.dart';
 import 'package:apple_shop_app/data/datasource/banner_datasource.dart';
 import 'package:apple_shop_app/data/datasource/basket_datasource.dart';
@@ -28,34 +29,33 @@ Future<void> getItInit() async {
   );
 
   // datasources
-  locator.registerFactory<IAuthenticationDataSource>(
-    () => AuthenticationRemote(),
-  );
+  locator.registerSingleton<IAuthenticationDataSource>(AuthenticationRemote());
 
-  locator.registerFactory<ICategoryDatasource>(
-    () => CategoryRemoteDatasource(),
-  );
+  locator.registerSingleton<ICategoryDatasource>(CategoryRemoteDatasource());
 
-  locator.registerFactory<IBannerDatasource>(() => BannerRemoteDatasource());
-  locator.registerFactory<IProductDatasource>(() => ProductRemoteDatasource());
-  locator.registerFactory<IDetailProductDatasource>(
-    () => DetailProductRemoteDatasource(),
+  locator.registerSingleton<IBannerDatasource>(BannerRemoteDatasource());
+  locator.registerSingleton<IProductDatasource>(ProductRemoteDatasource());
+  locator.registerSingleton<IDetailProductDatasource>(
+    DetailProductRemoteDatasource(),
   );
-  locator.registerFactory<ICategoryProductDatasource>(
-    () => CategoryProductRemoteDatasource(),
+  locator.registerSingleton<ICategoryProductDatasource>(
+    CategoryProductRemoteDatasource(),
   );
-  locator.registerFactory<IBasketDatasource>(() => BasketLocalDatasource());
+  locator.registerSingleton<IBasketDatasource>(BasketLocalDatasource());
 
   // repositories
-  locator.registerFactory<IAuthRepository>(() => AuthenticationRepository());
-  locator.registerFactory<ICategoryRepository>(() => CategoryRepository());
-  locator.registerFactory<IBannerRepository>(() => BannerRepository());
-  locator.registerFactory<IProductRepository>(() => ProductRepository());
-  locator.registerFactory<IDetailProductRepository>(
-    () => DetailProductRepository(),
+  locator.registerSingleton<IAuthRepository>(AuthenticationRepository());
+  locator.registerSingleton<ICategoryRepository>(CategoryRepository());
+  locator.registerSingleton<IBannerRepository>(BannerRepository());
+  locator.registerSingleton<IProductRepository>(ProductRepository());
+  locator.registerSingleton<IDetailProductRepository>(
+    DetailProductRepository(),
   );
-  locator.registerFactory<ICategoryProductRepository>(
-    () => CategoryProductRepository(),
+  locator.registerSingleton<ICategoryProductRepository>(
+    CategoryProductRepository(),
   );
-  locator.registerFactory<IBasketRepository>(() => BasketRepository());
+  locator.registerSingleton<IBasketRepository>(BasketRepository());
+
+  // bloc
+  locator.registerSingleton<BasketBloc>(BasketBloc());
 }
