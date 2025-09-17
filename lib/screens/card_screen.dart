@@ -89,34 +89,38 @@ class CardScreen extends StatelessWidget {
                     SliverPadding(padding: EdgeInsets.only(bottom: 60)),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 44,
-                    left: 44,
-                    bottom: 10,
-                  ),
-                  child: SizedBox(
-                    height: 53,
-                    width: MediaQuery.of(context).size.width,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: CustomColors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                if (state is BasketDataFetchedState) ...{
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 44,
+                      left: 44,
+                      bottom: 10,
+                    ),
+                    child: SizedBox(
+                      height: 53,
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: CustomColors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        'ادامه فرایند خرید',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'SM',
-                          fontSize: 18,
+                        onPressed: () {},
+                        child: Text(
+                          (state.basketFinalPrice == 0)
+                              ? '!سبد خرید شما خالیه'
+                              : state.basketFinalPrice.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'SM',
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                },
               ],
             );
           },
