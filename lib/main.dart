@@ -7,7 +7,7 @@ import 'package:apple_shop_app/bloc/home/home_bloc.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/di/di.dart';
-import 'package:apple_shop_app/screens/card_screen.dart';
+import 'package:apple_shop_app/screens/cart_screen.dart';
 import 'package:apple_shop_app/screens/category_screen.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/screens/profile_screen.dart';
@@ -161,7 +161,7 @@ class _MyAppState extends State<MyApp> {
           bloc.add(BasketFetchFromHiveEvent());
           return bloc;
         },
-        child: CardScreen(),
+        child: CartScreen(),
       ),
       // provide bloc for CategoryScreen
       BlocProvider(

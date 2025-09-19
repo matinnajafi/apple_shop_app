@@ -1,4 +1,5 @@
 import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop_app/bloc/basket/basket_event.dart';
 import 'package:apple_shop_app/bloc/basket/basket_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
@@ -7,13 +8,10 @@ import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 
 // ignore: must_be_immutable
-class CardScreen extends StatelessWidget {
-  var box = Hive.box<BasketItem>('BasketBox');
-
-  CardScreen({super.key});
+class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +49,7 @@ class CardScreen extends StatelessWidget {
                                   height: 24,
                                 ),
                                 Expanded(
-                                  child: Text(
+                                  child: const Text(
                                     'سبد خرید',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -86,7 +84,7 @@ class CardScreen extends StatelessWidget {
                         },
                       ),
                     },
-                    SliverPadding(padding: EdgeInsets.only(bottom: 60)),
+                    const SliverPadding(padding: EdgeInsets.only(bottom: 60)),
                   ],
                 ),
                 if (state is BasketDataFetchedState) ...{
@@ -106,7 +104,16 @@ class CardScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          // Event for Initialize Payment
+                          context.read<BasketBloc>().add(
+                            BasketPaymentInitEvent(),
+                          );
+                          // Event for Request Payment
+                          context.read<BasketBloc>().add(
+                            BasketPaymentRequestEvent(),
+                          );
+                        },
                         child: Text(
                           (state.basketFinalPrice == 0)
                               ? '!سبد خرید شما خالیه'
@@ -144,7 +151,7 @@ class CardItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: CustomColors.gery,
             blurRadius: 12.0,
@@ -248,9 +255,9 @@ class CardItem extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
+                                    const Text(
                                       'حذف',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 12,
                                         fontFamily: 'SM',
                                         color: CustomColors.red,
