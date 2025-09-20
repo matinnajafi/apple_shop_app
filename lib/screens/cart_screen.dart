@@ -9,7 +9,6 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
@@ -28,7 +27,7 @@ class CartScreen extends StatelessWidget {
                   slivers: [
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           left: 44,
                           right: 44,
                           bottom: 32,
@@ -118,7 +117,7 @@ class CartScreen extends StatelessWidget {
                           (state.basketFinalPrice == 0)
                               ? '!سبد خرید شما خالیه'
                               : state.basketFinalPrice.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'SM',
                             fontSize: 18,
@@ -137,15 +136,14 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
 class CardItem extends StatelessWidget {
-  BasketItem basketItem;
-  CardItem(this.basketItem, {super.key});
+  final BasketItem basketItem;
+  const CardItem(this.basketItem, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 44, left: 44, bottom: 20),
+      margin: const EdgeInsets.only(right: 44, left: 44, bottom: 20),
       height: 249,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -201,7 +199,7 @@ class CardItem extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 6,
                                   ),
-                                  child: Text(
+                                  child: const Text(
                                     '3%',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -273,8 +271,8 @@ class CardItem extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            optionCheap('آبی', color: '3B5EDF'),
-                            optionCheap('256 گیگابایت'),
+                            const OptionCheap('آبی', color: '3B5EDF'),
+                            const OptionCheap('256 گیگابایت'),
                           ],
                         ),
                       ],
@@ -282,7 +280,7 @@ class CardItem extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.only(right: 20),
                   child: SizedBox(
                     height: 104,
                     width: 75,
@@ -328,11 +326,10 @@ class CardItem extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable, camel_case_types
-class optionCheap extends StatelessWidget {
-  String? color;
-  String title;
-  optionCheap(this.title, {this.color, super.key});
+class OptionCheap extends StatelessWidget {
+  final String? color;
+  final String title;
+  const OptionCheap(this.title, {this.color, super.key});
 
   @override
   Widget build(BuildContext context) {
