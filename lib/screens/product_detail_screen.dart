@@ -13,6 +13,7 @@ import 'package:apple_shop_app/data/model/product_property.dart';
 import 'package:apple_shop_app/data/model/product_variant.dart';
 import 'package:apple_shop_app/data/model/variant.dart';
 import 'package:apple_shop_app/data/model/variant_type.dart';
+import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,15 +61,7 @@ class DetailsContentWidget extends StatelessWidget {
             child: CustomScrollView(
               slivers: [
                 if (state is ProductDetailLoadingState) ...{
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(color: Colors.blue),
-                      ),
-                    ),
-                  ),
+                  const SliverToBoxAdapter(child: LoadingAnimation()),
                 } else ...{
                   SliverToBoxAdapter(
                     child: Padding(

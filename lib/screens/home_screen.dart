@@ -10,6 +10,7 @@ import 'package:apple_shop_app/widgets/category_item_chip.dart';
 import 'package:apple_shop_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,76 +33,73 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            return CustomScrollView(
-              slivers: [
-                if (state is HomeLoadingState) ...{
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(color: Colors.blue),
-                    ),
-                  ),
-                } else ...{
-                  const _getAppbar(),
-                  if (state is HomeGetResponseState) ...[
-                    state.bannerList.fold(
-                      (exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      },
-                      (bannersList) {
-                        return _getBanners(bannerList: bannersList);
-                      },
-                    ),
-                  ],
-                  SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-                  const _getCategoryListTitle(),
-                  if (state is HomeGetResponseState) ...[
-                    state.categoryList.fold(
-                      (exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      },
-                      (categoryList) {
-                        return _getCategoryList(categoryList);
-                      },
-                    ),
-                  ],
-                  const _getBestSellerTitle(),
-                  if (state is HomeGetResponseState) ...[
-                    state.bestSellerProductList.fold(
-                      (exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      },
-                      (bestSellerProductList) {
-                        return _getBestSellerProduct(bestSellerProductList);
-                      },
-                    ),
-                  ],
-                  SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-                  const _getMostViewedTitle(),
-                  if (state is HomeGetResponseState) ...[
-                    state.hotestProductList.fold(
-                      (exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      },
-                      (hotestProductList) {
-                        return _getMostViewedProduct(hotestProductList);
-                      },
-                    ),
-                  ],
-                  const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
-                },
-              ],
-            );
+            return _getHomeScreenContent(state);
           },
         ),
       ),
+    );
+  }
+}
+
+Widget _getHomeScreenContent(HomeState state) {
+  if (state is HomeLoadingState) {
+    return const LoadingAnimation();
+  } else if (state is HomeGetResponseState) {
+    return CustomScrollView(
+      slivers: [
+        const _getAppbar(),
+        state.bannerList.fold(
+          (exceptionMessage) {
+            return SliverToBoxAdapter(child: Text(exceptionMessage));
+          },
+          (bannersList) {
+            return _getBanners(bannerList: bannersList);
+          },
+        ),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+        const _getCategoryListTitle(),
+        state.categoryList.fold(
+          (exceptionMessage) {
+            return SliverToBoxAdapter(child: Text(exceptionMessage));
+          },
+          (categoryList) {
+            return _getCategoryList(categoryList);
+          },
+        ),
+        const _getBestSellerTitle(),
+        state.bestSellerProductList.fold(
+          (exceptionMessage) {
+            return SliverToBoxAdapter(child: Text(exceptionMessage));
+          },
+          (bestSellerProductList) {
+            return _getBestSellerProduct(bestSellerProductList);
+          },
+        ),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+        const _getMostViewedTitle(),
+        state.hotestProductList.fold(
+          (exceptionMessage) {
+            return SliverToBoxAdapter(child: Text(exceptionMessage));
+          },
+          (hotestProductList) {
+            return _getMostViewedProduct(hotestProductList);
+          },
+        ),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
+      ],
+    );
+  } else {
+    return Center(child: Text('خطایی در دریافت داده ها رخ داده است!'));
+  }
+}
+
+class LoadingAnimation extends StatelessWidget {
+  const LoadingAnimation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: SpinKitCircle(color: CustomColors.blue, size: 60.0),
     );
   }
 }

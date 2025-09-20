@@ -3,6 +3,7 @@ import 'package:apple_shop_app/bloc/categoryProduct/category_product_event.dart'
 import 'package:apple_shop_app/bloc/categoryProduct/category_product_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/category.dart';
+import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,17 +71,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 if (state is CategoryProductLoadingState) ...{
-                  const SliverToBoxAdapter(
-                    child: Center(
-                      child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: CustomColors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
+                  const SliverToBoxAdapter(child: LoadingAnimation()),
                 },
                 if (state is CategoryProductResponseState) ...{
                   state.productListByCategory.fold(
