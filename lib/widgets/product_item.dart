@@ -3,6 +3,7 @@ import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/product.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/product_detail_screen.dart';
+import 'package:apple_shop_app/util/extentions/int_extensions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,8 +136,8 @@ class ProductItem extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                product.price.toString(),
-                                style: TextStyle(
+                                product.price.convertToPrice(),
+                                style: const TextStyle(
                                   color: Colors.white,
                                   decoration: TextDecoration.lineThrough,
                                   decorationThickness: 1.4,
@@ -145,11 +146,11 @@ class ProductItem extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                product.realPrice.toString(),
-                                style: TextStyle(
+                                product.realPrice.convertToPrice(),
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'SM',
-                                  fontSize: 16,
+                                  fontSize: 15,
                                 ),
                               ),
                             ],

@@ -3,6 +3,7 @@ import 'package:apple_shop_app/bloc/basket/basket_event.dart';
 import 'package:apple_shop_app/bloc/basket/basket_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
+import 'package:apple_shop_app/util/extentions/int_extensions.dart';
 import 'package:apple_shop_app/util/extentions/string_extentions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -116,7 +117,7 @@ class CartScreen extends StatelessWidget {
                         child: Text(
                           (state.basketFinalPrice == 0)
                               ? '!سبد خرید شما خالیه'
-                              : state.basketFinalPrice.toString(),
+                              : state.basketFinalPrice.convertToPrice(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'SM',
@@ -221,7 +222,7 @@ class CardItem extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              basketItem.realPrice.toString(),
+                              basketItem.realPrice.convertToPrice(),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'SM',
@@ -314,7 +315,7 @@ class CardItem extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 Text(
-                  basketItem.realPrice.toString(),
+                  basketItem.realPrice.convertToPrice(),
                   style: TextStyle(fontFamily: 'SB', fontSize: 16),
                 ),
               ],
