@@ -4,6 +4,7 @@ import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
 import 'package:apple_shop_app/bloc/basket/basket_event.dart';
 import 'package:apple_shop_app/bloc/category/category_bloc.dart';
 import 'package:apple_shop_app/bloc/home/home_bloc.dart';
+import 'package:apple_shop_app/bloc/home/home_event.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/di/di.dart';
@@ -172,7 +173,11 @@ class _MyAppState extends State<MyApp> {
         textDirection: TextDirection.rtl,
         // provide bloc for HomeScreen
         child: BlocProvider(
-          create: (context) => HomeBloc(),
+          create: (context) {
+            var bloc = HomeBloc();
+            bloc.add(HomeGetInitializeData());
+            return bloc;
+          },
           child: HomeScreen(),
         ),
       ),

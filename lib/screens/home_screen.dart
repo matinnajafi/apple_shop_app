@@ -12,19 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(HomeGetInitializeData());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            return _getHomeScreenContent(state);
+            return _getHomeScreenContent(state, context);
           },
         ),
       ),
@@ -41,52 +30,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget _getHomeScreenContent(HomeState state) {
+Widget _getHomeScreenContent(HomeState state, BuildContext context) {
   if (state is HomeLoadingState) {
     return const LoadingAnimation();
   } else if (state is HomeGetResponseState) {
-    return CustomScrollView(
-      slivers: [
-        const _getAppbar(),
-        state.bannerList.fold(
-          (exceptionMessage) {
-            return SliverToBoxAdapter(child: Text(exceptionMessage));
-          },
-          (bannersList) {
-            return _getBanners(bannerList: bannersList);
-          },
-        ),
-        const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-        const _getCategoryListTitle(),
-        state.categoryList.fold(
-          (exceptionMessage) {
-            return SliverToBoxAdapter(child: Text(exceptionMessage));
-          },
-          (categoryList) {
-            return _getCategoryList(categoryList);
-          },
-        ),
-        const _getBestSellerTitle(),
-        state.bestSellerProductList.fold(
-          (exceptionMessage) {
-            return SliverToBoxAdapter(child: Text(exceptionMessage));
-          },
-          (bestSellerProductList) {
-            return _getBestSellerProduct(bestSellerProductList);
-          },
-        ),
-        const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-        const _getMostViewedTitle(),
-        state.hotestProductList.fold(
-          (exceptionMessage) {
-            return SliverToBoxAdapter(child: Text(exceptionMessage));
-          },
-          (hotestProductList) {
-            return _getMostViewedProduct(hotestProductList);
-          },
-        ),
-        const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<HomeBloc>().add(HomeGetInitializeData());
+      },
+      child: CustomScrollView(
+        slivers: [
+          const _getAppbar(),
+          state.bannerList.fold(
+            (exceptionMessage) {
+              return SliverToBoxAdapter(child: Text(exceptionMessage));
+            },
+            (bannersList) {
+              return _getBanners(bannerList: bannersList);
+            },
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+          const _getCategoryListTitle(),
+          state.categoryList.fold(
+            (exceptionMessage) {
+              return SliverToBoxAdapter(child: Text(exceptionMessage));
+            },
+            (categoryList) {
+              return _getCategoryList(categoryList);
+            },
+          ),
+          const _getBestSellerTitle(),
+          state.bestSellerProductList.fold(
+            (exceptionMessage) {
+              return SliverToBoxAdapter(child: Text(exceptionMessage));
+            },
+            (bestSellerProductList) {
+              return _getBestSellerProduct(bestSellerProductList);
+            },
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+          const _getMostViewedTitle(),
+          state.hotestProductList.fold(
+            (exceptionMessage) {
+              return SliverToBoxAdapter(child: Text(exceptionMessage));
+            },
+            (hotestProductList) {
+              return _getMostViewedProduct(hotestProductList);
+            },
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
+        ],
+      ),
     );
   } else {
     return Center(child: Text('خطایی در دریافت داده ها رخ داده است!'));
