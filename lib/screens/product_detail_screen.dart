@@ -3,16 +3,21 @@ import 'dart:ui';
 
 import 'package:apple_shop_app/bloc/basket/basket_bloc.dart';
 import 'package:apple_shop_app/bloc/basket/basket_event.dart';
+import 'package:apple_shop_app/bloc/comment/comment_bloc.dart';
+import 'package:apple_shop_app/bloc/comment/comment_event.dart';
+import 'package:apple_shop_app/bloc/comment/comment_state.dart';
 import 'package:apple_shop_app/bloc/product/product_bloc.dart';
 import 'package:apple_shop_app/bloc/product/product_event.dart';
 import 'package:apple_shop_app/bloc/product/product_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/data/model/comment.dart';
 import 'package:apple_shop_app/data/model/product.dart';
 import 'package:apple_shop_app/data/model/productImage.dart';
 import 'package:apple_shop_app/data/model/product_property.dart';
 import 'package:apple_shop_app/data/model/product_variant.dart';
 import 'package:apple_shop_app/data/model/variant.dart';
 import 'package:apple_shop_app/data/model/variant_type.dart';
+import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
@@ -202,117 +207,148 @@ class DetailsContentWidget extends StatelessWidget {
                   },
                   getProductDescription(parentWidget.product.description),
                   SliverToBoxAdapter(
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        left: 44,
-                        right: 44,
-                        top: 24,
-                      ),
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: CustomColors.gery, width: 1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/icon_left_category.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'مشاهده',
-                              style: TextStyle(
-                                fontFamily: 'SB',
-                                fontSize: 12,
-                                color: CustomColors.blue,
+                    child: GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return BlocProvider(
+                              child: DraggableScrollableSheet(
+                                initialChildSize: 0.8,
+                                minChildSize: 0.6,
+                                maxChildSize: 0.9,
+                                builder: (context, controller) {
+                                  return CommentBottomSheet(controller);
+                                },
                               ),
-                            ),
-                            const Spacer(),
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Positioned(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      color: CustomColors.blue,
-                                      borderRadius: BorderRadius.circular(8),
+                              create: (context) {
+                                var bloc = CommentBloc(locator.get());
+                                bloc.add(
+                                  CommentInitializeEvent(
+                                    parentWidget.product.id,
+                                  ),
+                                );
+                                return bloc;
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 44,
+                          right: 44,
+                          top: 24,
+                        ),
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: CustomColors.gery,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/icon_left_category.png',
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'مشاهده',
+                                style: TextStyle(
+                                  fontFamily: 'SB',
+                                  fontSize: 12,
+                                  color: CustomColors.blue,
+                                ),
+                              ),
+                              const Spacer(),
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.blue,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  right: 15,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      color: CustomColors.red,
-                                      borderRadius: BorderRadius.circular(8),
+                                  Positioned(
+                                    right: 15,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.red,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  right: 30,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      color: CustomColors.green,
-                                      borderRadius: BorderRadius.circular(8),
+                                  Positioned(
+                                    right: 30,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.green,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  right: 45,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      color: Colors.yellow,
-                                      borderRadius: BorderRadius.circular(8),
+                                  Positioned(
+                                    right: 45,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        color: Colors.yellow,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  right: 60,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      color: CustomColors.gery,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '+10',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'SM',
-                                          fontSize: 12,
+                                  Positioned(
+                                    right: 60,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.gery,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '+10',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'SM',
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              ': نظرات کاربران',
-                              style: TextStyle(fontFamily: 'SM'),
-                            ),
-                          ],
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                ': نظرات کاربران',
+                                style: TextStyle(fontFamily: 'SM'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -342,6 +378,117 @@ class DetailsContentWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class CommentBottomSheet extends StatelessWidget {
+  const CommentBottomSheet(this.controller, {super.key});
+  final ScrollController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CommentBloc, CommentState>(
+      builder: (context, state) {
+        if (state is CommentLoadingState) {
+          return LoadingAnimation();
+        } else if (state is CommentResponseState) {
+          return CustomScrollView(
+            controller: controller,
+            slivers: [
+              state.response.fold(
+                (exceptionMessage) {
+                  return SliverToBoxAdapter(child: Text(exceptionMessage));
+                },
+                (commentList) {
+                  if (commentList.isEmpty) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'برای این محصول کامنتی ثبت نشده!',
+                          style: TextStyle(fontSize: 16, fontFamily: 'SB'),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: commentList.length,
+                        (context, index) {
+                          final commentItem = commentList[index];
+                          return _buildCommentItem(commentItem);
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          );
+        } else if (state is CommentErrorState) {
+          return Text('خطایی رخ داده!');
+        } else {
+          return Text('خطای نامشخصی رخ داده!');
+        }
+      },
+    );
+  }
+}
+
+Widget _buildCommentItem(Comment commentItem) {
+  // checks for empty/null username and avatar
+  final isUsernameEmpty = commentItem.username?.isEmpty ?? true;
+  final isAvatarEmpty = commentItem.avatar?.isEmpty ?? true;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Display username or a default value
+                Text(
+                  isUsernameEmpty ? 'کاربر' : commentItem.username!,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: isUsernameEmpty ? 'SM' : 'SB',
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+                const SizedBox(height: 4),
+                // Display comment text safely, providing an empty string if null
+                Text(
+                  commentItem.text ?? '',
+                  style: const TextStyle(fontSize: 14, fontFamily: 'SM'),
+                  textAlign: TextAlign.right,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8.0),
+          // Display user avatar or a default placeholder
+          SizedBox(
+            height: 34,
+            width: 34,
+            child:
+                isAvatarEmpty
+                    ? Image.asset('assets/images/avatar.png')
+                    : ClipRRect(
+                      borderRadius: BorderRadius.circular(34),
+                      child: CachedImage(
+                        imageUrl: commentItem.userThumbnailUrl,
+                      ),
+                    ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 // ignore: must_be_immutable, camel_case_types
