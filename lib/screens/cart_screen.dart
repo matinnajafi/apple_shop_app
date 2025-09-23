@@ -117,11 +117,12 @@ class CartScreen extends StatelessWidget {
                         child: Text(
                           (state.basketFinalPrice == 0)
                               ? '!سبد خرید شما خالیه'
-                              : state.basketFinalPrice.convertToPrice(),
+                              : 'پرداخت مبلغ : ${state.basketFinalPrice.convertToPrice()}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'SM',
                             fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
