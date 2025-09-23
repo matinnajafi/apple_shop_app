@@ -210,6 +210,8 @@ class DetailsContentWidget extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
+                          showDragHandle: true,
+                          enableDrag: true,
                           context: context,
                           builder: (context) {
                             return BlocProvider(
@@ -218,7 +220,10 @@ class DetailsContentWidget extends StatelessWidget {
                                 minChildSize: 0.6,
                                 maxChildSize: 0.9,
                                 builder: (context, controller) {
-                                  return CommentBottomSheet(controller);
+                                  return CommentBottomSheet(
+                                    controller,
+                                    productId: parentWidget.product.id,
+                                  );
                                 },
                               ),
                               create: (context) {
@@ -381,8 +386,10 @@ class DetailsContentWidget extends StatelessWidget {
 }
 
 class CommentBottomSheet extends StatelessWidget {
-  const CommentBottomSheet(this.controller, {super.key});
+  CommentBottomSheet(this.controller, {super.key, required this.productId});
   final ScrollController controller;
+  final String productId;
+  final TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -391,35 +398,126 @@ class CommentBottomSheet extends StatelessWidget {
         if (state is CommentLoadingState) {
           return LoadingAnimation();
         } else if (state is CommentResponseState) {
-          return CustomScrollView(
-            controller: controller,
-            slivers: [
-              state.response.fold(
-                (exceptionMessage) {
-                  return SliverToBoxAdapter(child: Text(exceptionMessage));
-                },
-                (commentList) {
-                  if (commentList.isEmpty) {
-                    return const SliverToBoxAdapter(
-                      child: Center(
-                        child: Text(
-                          'برای این محصول کامنتی ثبت نشده!',
-                          style: TextStyle(fontSize: 16, fontFamily: 'SB'),
+          return Column(
+            children: [
+              Expanded(
+                child: CustomScrollView(
+                  controller: controller,
+                  slivers: [
+                    state.response.fold(
+                      (exceptionMessage) {
+                        return SliverToBoxAdapter(
+                          child: Text(exceptionMessage),
+                        );
+                      },
+                      (commentList) {
+                        if (commentList.isEmpty) {
+                          return const SliverToBoxAdapter(
+                            child: Center(
+                              child: Text(
+                                'برای این محصول کامنتی ثبت نشده!',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'SB',
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: commentList.length,
+                              (context, index) {
+                                final commentItem = commentList[index];
+                                return _buildCommentItem(commentItem);
+                              },
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: textController,
+                        decoration: InputDecoration(
+                          labelStyle: const TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: CustomColors.blue,
+                              width: 3,
+                            ),
+                          ),
                         ),
                       ),
-                    );
-                  } else {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        childCount: commentList.length,
-                        (context, index) {
-                          final commentItem = commentList[index];
-                          return _buildCommentItem(commentItem);
-                        },
+                      const SizedBox(height: 6.0),
+                      Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        children: [
+                          Container(
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: CustomColors.blue,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (textController.text.trim().isEmpty) {
+                                    return;
+                                    // show error snackbar or...
+                                  }
+                                  context.read<CommentBloc>().add(
+                                    CommentPostEvent(
+                                      productId,
+                                      textController.text,
+                                    ),
+                                  );
+                                  textController.clear();
+                                },
+                                child: const SizedBox(
+                                  height: 53,
+                                  child: Center(
+                                    child: Text(
+                                      'ثبت نظر',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'SB',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  }
-                },
+                    ],
+                  ),
+                ),
               ),
             ],
           );
