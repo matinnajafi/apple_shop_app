@@ -1,5 +1,12 @@
+import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
+import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/main.dart';
+import 'package:apple_shop_app/screens/dashboard_screen.dart';
+import 'package:apple_shop_app/screens/login_screen.dart';
+import 'package:apple_shop_app/util/auth_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
+              padding: const EdgeInsets.only(left: 44, right: 44, bottom: 32),
               child: Container(
                 height: 46,
                 decoration: BoxDecoration(
@@ -33,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 24,
                         height: 24,
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'حساب کاربری',
                           textAlign: TextAlign.center,
@@ -49,12 +56,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Text('متین نجفی', style: TextStyle(fontFamily: 'SB', fontSize: 16)),
-            Text(
+            const Text(
+              'متین نجفی',
+              style: TextStyle(fontFamily: 'SB', fontSize: 16),
+            ),
+            const Text(
               '09123456789',
               style: TextStyle(fontFamily: 'SM', fontSize: 12),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.only(right: 24),
               child: Wrap(
@@ -85,7 +95,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: CustomColors.gery,
               ),
             ),
-
             const Text(
               'v-1.0.0',
               style: TextStyle(
@@ -102,7 +111,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: CustomColors.gery,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(
+              height: 36,
+              child: TextButton(
+                style: TextButton.styleFrom(overlayColor: CustomColors.red),
+                onPressed: () {
+                  AuthManager.logout();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return BlocProvider(
+                          create: (context) {
+                            var authBloc = AuthBloc();
+                            authBloc.stream.forEach((state) {
+                              if (state is AuthResponseState) {
+                                state.response.fold(
+                                  (exceptionMessage) {
+                                    Text('Error: $exceptionMessage');
+                                  },
+                                  (successMessage) {
+                                    globalNavigatorKey.currentState
+                                        ?.pushReplacement(
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    const DashboardScreen(),
+                                          ),
+                                        );
+                                  },
+                                );
+                              }
+                            });
+                            return authBloc;
+                          },
+                          child: LoginScreen(),
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Text(
+                  'خروج از حساب کاربری',
+                  style: TextStyle(
+                    fontFamily: 'SM',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
