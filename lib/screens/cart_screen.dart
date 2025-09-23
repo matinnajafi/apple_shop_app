@@ -78,7 +78,7 @@ class CartScreen extends StatelessWidget {
                               context,
                               index,
                             ) {
-                              return CardItem(basketItemList[index]);
+                              return CardItem(basketItemList[index], index);
                             }, childCount: basketItemList.length),
                           );
                         },
@@ -140,7 +140,8 @@ class CartScreen extends StatelessWidget {
 
 class CardItem extends StatelessWidget {
   final BasketItem basketItem;
-  const CardItem(this.basketItem, {super.key});
+  final int index;
+  const CardItem(this.basketItem, this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -238,38 +239,45 @@ class CardItem extends StatelessWidget {
                           runSpacing: 6,
                           alignment: WrapAlignment.end,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: CustomColors.red.withOpacity(0.6),
-                                  width: 1,
+                            GestureDetector(
+                              onTap: () {
+                                context.read<BasketBloc>().add(
+                                  BasketRemoveProductEvent(index),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: CustomColors.red.withOpacity(0.6),
+                                    width: 1,
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                      'حذف',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'SM',
-                                        color: CustomColors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'حذف',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: 'SM',
+                                          color: CustomColors.red,
+                                        ),
+                                        textDirection: TextDirection.rtl,
                                       ),
-                                      textDirection: TextDirection.rtl,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Image.asset(
-                                      'assets/images/icon_trash.png',
-                                      scale: 1.1,
-                                    ),
-                                  ],
+                                      const SizedBox(width: 4),
+                                      Image.asset(
+                                        'assets/images/icon_trash.png',
+                                        scale: 1.1,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
