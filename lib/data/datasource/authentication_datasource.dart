@@ -41,6 +41,7 @@ class AuthenticationRemote implements IAuthenticationDataSource {
       throw ApiException(
         ex.response?.data['code'],
         ex.response?.data['message'],
+        response: ex.response,
       );
     } catch (ex) {
       throw ApiException(0, 'unknown error');
