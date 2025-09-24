@@ -1,6 +1,7 @@
 import 'package:apple_shop_app/data/model/comment.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/util/api_exception.dart';
+import 'package:apple_shop_app/util/auth_manager.dart';
 import 'package:dio/dio.dart';
 
 abstract class ICommentDatasource {
@@ -10,13 +11,15 @@ abstract class ICommentDatasource {
 
 class CommentRemoteDatasource extends ICommentDatasource {
   final Dio _dio = locator.get();
+  final String userId = AuthManager.getId();
 
   @override
   Future<List<Comment>> getComments(String productId) async {
     try {
-      Map<String, String> qParams = {
+      Map<String, dynamic> qParams = {
         'filter': 'product_id="$productId"',
         'expand': 'user_id', // expand relations
+        'perPage': 600, // get a lot of comments!
       };
       var response = await _dio.get(
         'collections/comment/records',
@@ -40,11 +43,7 @@ class CommentRemoteDatasource extends ICommentDatasource {
     try {
       final response = await _dio.post(
         'collections/comment/records',
-        data: {
-          'text': comment,
-          'user_id': '3bqgpvcqep8pcso',
-          'product_id': productId,
-        },
+        data: {'text': comment, 'user_id': userId, 'product_id': productId},
       );
       print('statusssss: ${response.statusCode}'); // test line for debug
     } on DioException catch (ex) {

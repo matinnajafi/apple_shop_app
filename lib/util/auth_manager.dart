@@ -12,6 +12,14 @@ class AuthManager {
     authChangeNotifier.value = token;
   }
 
+  static void saveId(String id) async {
+    _sharedPref.setString('user_id', id);
+  }
+
+  static String getId() {
+    return _sharedPref.getString('user_id') ?? '';
+  }
+
   static String readAuth() {
     return _sharedPref.getString('access_token') ?? '';
   }
