@@ -24,7 +24,7 @@ class AuthenticationRepository implements IAuthRepository {
     String passwordConfirm,
   ) async {
     try {
-      await _datasource.register('matin894', '12345678', '12345678');
+      await _datasource.register(username, password, passwordConfirm);
       return right('ثبت نام با موفقیت انجام شد!');
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطایی رخ داده');

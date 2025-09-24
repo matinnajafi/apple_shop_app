@@ -2,20 +2,19 @@ import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_event.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/main.dart';
-import 'package:apple_shop_app/screens/dashboard_screen.dart';
-import 'package:apple_shop_app/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
   final TextEditingController _usernameController = TextEditingController(
-    text: 'matin892',
+    text: '',
   );
   final TextEditingController _passwordController = TextEditingController(
     text: '12345678',
   );
+  final TextEditingController _passwordConfirmController =
+      TextEditingController(text: '12345678');
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +109,32 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _passwordConfirmController,
+                        decoration: InputDecoration(
+                          labelText: 'تکرار رمز عبور',
+                          labelStyle: const TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: CustomColors.blue,
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 30),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
@@ -123,16 +148,17 @@ class LoginScreen extends StatelessWidget {
                                 backgroundColor: Colors.blueAccent,
                               ),
                               onPressed: () {
-                                // send login request
+                                // send register request
                                 BlocProvider.of<AuthBloc>(context).add(
-                                  AuthLoginRequest(
+                                  AuthRegisterRequest(
                                     _usernameController.text,
                                     _passwordController.text,
+                                    _passwordConfirmController.text,
                                   ),
                                 );
                               },
                               child: const Text(
-                                'ورود به حساب کاربری',
+                                'ثبت نام',
                                 style: TextStyle(
                                   fontFamily: 'SB',
                                   color: Colors.white,
@@ -142,7 +168,7 @@ class LoginScreen extends StatelessWidget {
                             );
                           }
                           if (state is AuthLoadingState) {
-                            return CircularProgressIndicator(
+                            return const CircularProgressIndicator(
                               color: CustomColors.blueIndicator,
                             );
                           }
@@ -161,52 +187,6 @@ class LoginScreen extends StatelessWidget {
                           }
                           return const Text('خطای نامشخص');
                         },
-                      ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => BlocProvider(
-                                    create: (context) {
-                                      var authBloc = AuthBloc();
-                                      authBloc.stream.forEach((state) {
-                                        if (state is AuthResponseState) {
-                                          state.response.fold(
-                                            (exceptionMessage) {
-                                              Text('Error: $exceptionMessage');
-                                            },
-                                            (successMessage) {
-                                              globalNavigatorKey.currentState
-                                                  ?.pushReplacement(
-                                                    MaterialPageRoute(
-                                                      builder:
-                                                          (context) =>
-                                                              const DashboardScreen(),
-                                                    ),
-                                                  );
-                                            },
-                                          );
-                                        }
-                                      });
-                                      return authBloc;
-                                    },
-                                    child: RegisterScreen(),
-                                  ),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'اگر حساب کاربری ندارید ثبت نام کنید',
-                          style: TextStyle(
-                            fontFamily: 'SM',
-                            color: CustomColors.blueIndicator,
-                            fontSize: 12,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
                       ),
                     ],
                   ),
