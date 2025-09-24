@@ -130,8 +130,24 @@ class ViewContainer extends StatelessWidget {
                   if (state is AuthResponseState) {
                     state.response.fold(
                       (exceptionMessage) {
-                        // show error message
-                        // print(exceptionMessage);
+                        _usernameController.clear();
+                        _passwordController.clear();
+                        var snackBar = SnackBar(
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                          content: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Text(
+                              exceptionMessage,
+                              style: const TextStyle(
+                                fontFamily: 'SM',
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                       (successMessage) {
                         Navigator.of(context).pushReplacement(
@@ -178,17 +194,48 @@ class ViewContainer extends StatelessWidget {
                     );
                   }
                   if (state is AuthResponseState) {
-                    return Text(
-                      state.response.fold((l) => l, (r) => r),
-                      style: TextStyle(
-                        fontFamily: 'SB',
-                        color:
-                            state.response.isLeft()
-                                ? CustomColors.red
-                                : CustomColors.green,
-                        fontSize: 16,
-                      ),
+                    Widget widget = Text('');
+                    state.response.fold(
+                      (l) {
+                        widget = ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: const Size(200, 50),
+                            backgroundColor: Colors.blue[800],
+                          ),
+                          onPressed: () {
+                            // send login request
+                            BlocProvider.of<AuthBloc>(context).add(
+                              AuthLoginRequest(
+                                _usernameController.text,
+                                _passwordController.text,
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'ورود به حساب کاربری',
+                            style: TextStyle(
+                              fontFamily: 'SB',
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        );
+                      },
+                      (r) {
+                        return widget = Text(
+                          r,
+                          style: const TextStyle(
+                            fontFamily: 'SM',
+                            color: Colors.green,
+                            fontSize: 14,
+                          ),
+                        );
+                      },
                     );
+                    return widget;
                   }
                   return const Text('خطای نامشخص');
                 },
