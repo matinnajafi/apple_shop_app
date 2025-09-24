@@ -3,6 +3,7 @@ import 'package:apple_shop_app/bloc/authentication/auth_event.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
+import 'package:apple_shop_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -238,6 +239,24 @@ class ViewContainer extends StatelessWidget {
                       }
                       return const Text('خطای نامشخص');
                     },
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    child: const Text(
+                      'قبلا ثبت نام کرده اید؟ وارد شوید',
+                      style: TextStyle(
+                        fontFamily: 'SM',
+                        color: CustomColors.blueIndicator,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
                 ],
               ),

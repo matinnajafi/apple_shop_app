@@ -1,7 +1,6 @@
 import 'package:apple_shop_app/data/datasource/authentication_datasource.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/util/api_exception.dart';
-import 'package:apple_shop_app/util/auth_manager.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class IAuthRepository {
@@ -37,8 +36,11 @@ class AuthenticationRepository implements IAuthRepository {
   Future<Either<String, String>> login(String username, String password) async {
     try {
       String token = await _datasource.login(username, password);
-      AuthManager.saveToken(token);
-      return right('شما با موفقیت وارد شدید!');
+      if (token.isNotEmpty) {
+        return right('شما با موفقیت وارد شدید!');
+      } else {
+        return left('خطایی در ورود رخ داده!');
+      }
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطایی در ورود رخ داده!');
     } catch (ex) {
