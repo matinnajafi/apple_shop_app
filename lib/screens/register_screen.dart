@@ -2,6 +2,7 @@ import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_event.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
+import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,33 @@ class RegisterScreen extends StatelessWidget {
   );
   final TextEditingController _passwordConfirmController =
       TextEditingController(text: '12345678');
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthBloc(),
+      child: ViewContainer(
+        usernameController: _usernameController,
+        passwordController: _passwordController,
+        passwordConfirmController: _passwordConfirmController,
+      ),
+    );
+  }
+}
+
+class ViewContainer extends StatelessWidget {
+  const ViewContainer({
+    super.key,
+    required TextEditingController usernameController,
+    required TextEditingController passwordController,
+    required TextEditingController passwordConfirmController,
+  }) : _usernameController = usernameController,
+       _passwordController = passwordController,
+       _passwordConfirmController = passwordConfirmController;
+
+  final TextEditingController _usernameController;
+  final TextEditingController _passwordController;
+  final TextEditingController _passwordConfirmController;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +170,24 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  BlocBuilder<AuthBloc, AuthState>(
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthResponseState) {
+                        state.response.fold(
+                          (exceptionMessage) {
+                            // show error message
+                            // print(exceptionMessage);
+                          },
+                          (successMessage) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const DashboardScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
                     builder: (context, state) {
                       if (state is AuthInitiateState) {
                         return ElevatedButton(

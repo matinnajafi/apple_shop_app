@@ -18,6 +18,29 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthBloc(),
+      child: ViewContainer(
+        usernameController: _usernameController,
+        passwordController: _passwordController,
+      ),
+    );
+  }
+}
+
+class ViewContainer extends StatelessWidget {
+  const ViewContainer({
+    super.key,
+    required TextEditingController usernameController,
+    required TextEditingController passwordController,
+  }) : _usernameController = usernameController,
+       _passwordController = passwordController;
+
+  final TextEditingController _usernameController;
+  final TextEditingController _passwordController;
+
+  @override
+  Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -102,7 +125,24 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              BlocBuilder<AuthBloc, AuthState>(
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthResponseState) {
+                    state.response.fold(
+                      (exceptionMessage) {
+                        // show error message
+                        // print(exceptionMessage);
+                      },
+                      (successMessage) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const DashboardScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
                 builder: (context, state) {
                   if (state is AuthInitiateState) {
                     return ElevatedButton(
@@ -158,42 +198,7 @@ class LoginScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => BlocProvider(
-                            create: (context) {
-                              var authBloc = AuthBloc();
-                              authBloc.stream.forEach((state) {
-                                if (state is AuthResponseState) {
-                                  state.response.fold(
-                                    (exceptionMessage) {
-                                      Text('Error: $exceptionMessage');
-                                    },
-                                    (successMessage) {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) =>
-                                                  const DashboardScreen(),
-                                        ),
-                                      );
-                                      // globalNavigatorKey.currentState
-                                      //     ?.pushReplacement(
-                                      //       MaterialPageRoute(
-                                      //         builder:
-                                      //             (context) =>
-                                      //                 const DashboardScreen(),
-                                      //       ),
-                                      //     );
-                                    },
-                                  );
-                                }
-                              });
-                              return authBloc;
-                            },
-                            child: RegisterScreen(),
-                          ),
-                    ),
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
                   );
                 },
                 child: const Text(

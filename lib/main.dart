@@ -1,11 +1,9 @@
-import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/login_screen.dart';
 import 'package:apple_shop_app/util/auth_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
@@ -39,10 +37,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body:
             (AuthManager.readAuth().isEmpty) // user is not logged in
-                ? BlocProvider(
-                  create: (context) => AuthBloc(),
-                  child: LoginScreen(),
-                )
+                ? LoginScreen()
                 : DashboardScreen(), // user is logged in
       ),
     );
