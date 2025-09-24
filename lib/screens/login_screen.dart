@@ -2,7 +2,6 @@ import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_event.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/main.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,193 +21,188 @@ class LoginScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: CustomColors.blue,
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              Expanded(
+              const SizedBox(height: 60),
+              Image.asset('assets/images/login_photo.jpg', height: 200),
+              const SizedBox(height: 80),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 24.0,
+                  left: 24.0,
+                  bottom: 24.0,
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.asset('assets/images/icon_application.png'),
-                    ),
-                    const SizedBox(height: 20),
                     const Text(
-                      'اپل شاپ',
+                      'نام کاربری :',
                       style: TextStyle(
-                        fontFamily: 'SB',
-                        fontSize: 24,
-                        color: Colors.white,
+                        fontFamily: 'SM',
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      color: Colors.grey[300],
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelStyle: const TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'نام کاربری',
-                          labelStyle: const TextStyle(
-                            fontFamily: 'SM',
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: CustomColors.blue,
-                              width: 3,
-                            ),
-                          ),
-                        ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 24.0,
+                  left: 24.0,
+                  bottom: 24.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'رمز عبور :',
+                      style: TextStyle(
+                        fontFamily: 'SM',
+                        fontSize: 16,
+                        color: Colors.black,
                       ),
-                      const SizedBox(height: 20),
-                      TextField(
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      color: Colors.grey[300],
+                      child: TextField(
                         controller: _passwordController,
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
                         decoration: InputDecoration(
-                          labelText: 'رمز عبور',
+                          border: InputBorder.none,
                           labelStyle: const TextStyle(
                             fontFamily: 'SM',
                             fontSize: 18,
                             color: Colors.black,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: CustomColors.blue,
-                              width: 3,
-                            ),
-                          ),
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          if (state is AuthInitiateState) {
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                minimumSize: Size(200, 50),
-                                backgroundColor: Colors.blueAccent,
-                              ),
-                              onPressed: () {
-                                // send login request
-                                BlocProvider.of<AuthBloc>(context).add(
-                                  AuthLoginRequest(
-                                    _usernameController.text,
-                                    _passwordController.text,
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'ورود به حساب کاربری',
-                                style: TextStyle(
-                                  fontFamily: 'SB',
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            );
-                          }
-                          if (state is AuthLoadingState) {
-                            return CircularProgressIndicator(
-                              color: CustomColors.blueIndicator,
-                            );
-                          }
-                          if (state is AuthResponseState) {
-                            return Text(
-                              state.response.fold((l) => l, (r) => r),
-                              style: TextStyle(
-                                fontFamily: 'SB',
-                                color:
-                                    state.response.isLeft()
-                                        ? CustomColors.red
-                                        : CustomColors.green,
-                                fontSize: 16,
-                              ),
-                            );
-                          }
-                          return const Text('خطای نامشخص');
-                        },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthInitiateState) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        minimumSize: Size(200, 50),
+                        backgroundColor: Colors.blue[800],
                       ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => BlocProvider(
-                                    create: (context) {
-                                      var authBloc = AuthBloc();
-                                      authBloc.stream.forEach((state) {
-                                        if (state is AuthResponseState) {
-                                          state.response.fold(
-                                            (exceptionMessage) {
-                                              Text('Error: $exceptionMessage');
-                                            },
-                                            (successMessage) {
-                                              globalNavigatorKey.currentState
-                                                  ?.pushReplacement(
-                                                    MaterialPageRoute(
-                                                      builder:
-                                                          (context) =>
-                                                              const DashboardScreen(),
-                                                    ),
-                                                  );
-                                            },
-                                          );
-                                        }
-                                      });
-                                      return authBloc;
+                      onPressed: () {
+                        // send login request
+                        BlocProvider.of<AuthBloc>(context).add(
+                          AuthLoginRequest(
+                            _usernameController.text,
+                            _passwordController.text,
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'ورود به حساب کاربری',
+                        style: TextStyle(
+                          fontFamily: 'SB',
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    );
+                  }
+                  if (state is AuthLoadingState) {
+                    return CircularProgressIndicator(
+                      color: CustomColors.blueIndicator,
+                    );
+                  }
+                  if (state is AuthResponseState) {
+                    return Text(
+                      state.response.fold((l) => l, (r) => r),
+                      style: TextStyle(
+                        fontFamily: 'SB',
+                        color:
+                            state.response.isLeft()
+                                ? CustomColors.red
+                                : CustomColors.green,
+                        fontSize: 16,
+                      ),
+                    );
+                  }
+                  return const Text('خطای نامشخص');
+                },
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => BlocProvider(
+                            create: (context) {
+                              var authBloc = AuthBloc();
+                              authBloc.stream.forEach((state) {
+                                if (state is AuthResponseState) {
+                                  state.response.fold(
+                                    (exceptionMessage) {
+                                      Text('Error: $exceptionMessage');
                                     },
-                                    child: RegisterScreen(),
-                                  ),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'اگر حساب کاربری ندارید ثبت نام کنید',
-                          style: TextStyle(
-                            fontFamily: 'SM',
-                            color: CustomColors.blueIndicator,
-                            fontSize: 12,
-                            decoration: TextDecoration.underline,
+                                    (successMessage) {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  const DashboardScreen(),
+                                        ),
+                                      );
+                                      // globalNavigatorKey.currentState
+                                      //     ?.pushReplacement(
+                                      //       MaterialPageRoute(
+                                      //         builder:
+                                      //             (context) =>
+                                      //                 const DashboardScreen(),
+                                      //       ),
+                                      //     );
+                                    },
+                                  );
+                                }
+                              });
+                              return authBloc;
+                            },
+                            child: RegisterScreen(),
                           ),
-                        ),
-                      ),
-                    ],
+                    ),
+                  );
+                },
+                child: const Text(
+                  'اگر حساب کاربری ندارید ثبت نام کنید',
+                  style: TextStyle(
+                    fontFamily: 'SM',
+                    color: CustomColors.blueIndicator,
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),

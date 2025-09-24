@@ -1,7 +1,6 @@
 import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/main.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/login_screen.dart';
 import 'package:apple_shop_app/util/auth_manager.dart';
@@ -130,14 +129,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Text('Error: $exceptionMessage');
                                   },
                                   (successMessage) {
-                                    globalNavigatorKey.currentState
-                                        ?.pushReplacement(
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    const DashboardScreen(),
-                                          ),
-                                        );
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                const DashboardScreen(),
+                                      ),
+                                    );
+                                    // globalNavigatorKey.currentState
+                                    //     ?.pushReplacement(
+                                    //       MaterialPageRoute(
+                                    //         builder:
+                                    //             (context) =>
+                                    //                 const DashboardScreen(),
+                                    //       ),
+                                    //     );
                                   },
                                 );
                               }

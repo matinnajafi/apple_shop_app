@@ -21,176 +21,180 @@ class RegisterScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: CustomColors.blue,
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.asset('assets/images/icon_application.png'),
+              Column(
+                children: [
+                  const SizedBox(height: 60),
+                  Image.asset('assets/images/register.jpg', height: 200),
+                  const SizedBox(height: 80),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 24.0,
+                      left: 24.0,
+                      bottom: 24.0,
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'اپل شاپ',
-                      style: TextStyle(
-                        fontFamily: 'SB',
-                        fontSize: 24,
-                        color: Colors.white,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'نام کاربری :',
+                          style: TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          color: Colors.grey[300],
+                          child: TextField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelStyle: const TextStyle(
+                                fontFamily: 'SM',
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'نام کاربری',
-                          labelStyle: const TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 24.0,
+                      left: 24.0,
+                      bottom: 24.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'رمز عبور :',
+                          style: TextStyle(
                             fontFamily: 'SM',
-                            fontSize: 18,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: CustomColors.blue,
-                              width: 3,
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          color: Colors.grey[300],
+                          child: TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelStyle: const TextStyle(
+                                fontFamily: 'SM',
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'رمز عبور',
-                          labelStyle: const TextStyle(
-                            fontFamily: 'SM',
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: CustomColors.blue,
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: _passwordConfirmController,
-                        decoration: InputDecoration(
-                          labelText: 'تکرار رمز عبور',
-                          labelStyle: const TextStyle(
-                            fontFamily: 'SM',
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                              color: CustomColors.blue,
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          if (state is AuthInitiateState) {
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                minimumSize: Size(200, 50),
-                                backgroundColor: Colors.blueAccent,
-                              ),
-                              onPressed: () {
-                                // send register request
-                                BlocProvider.of<AuthBloc>(context).add(
-                                  AuthRegisterRequest(
-                                    _usernameController.text,
-                                    _passwordController.text,
-                                    _passwordConfirmController.text,
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'ثبت نام',
-                                style: TextStyle(
-                                  fontFamily: 'SB',
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            );
-                          }
-                          if (state is AuthLoadingState) {
-                            return const CircularProgressIndicator(
-                              color: CustomColors.blueIndicator,
-                            );
-                          }
-                          if (state is AuthResponseState) {
-                            return Text(
-                              state.response.fold((l) => l, (r) => r),
-                              style: TextStyle(
-                                fontFamily: 'SB',
-                                color:
-                                    state.response.isLeft()
-                                        ? CustomColors.red
-                                        : CustomColors.green,
-                                fontSize: 16,
-                              ),
-                            );
-                          }
-                          return const Text('خطای نامشخص');
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 24.0,
+                      left: 24.0,
+                      bottom: 24.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'تکرار رمز عبور :',
+                          style: TextStyle(
+                            fontFamily: 'SM',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          color: Colors.grey[300],
+                          child: TextField(
+                            controller: _passwordConfirmController,
+                            obscureText: true,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelStyle: const TextStyle(
+                                fontFamily: 'SM',
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthInitiateState) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(200, 50),
+                            backgroundColor: Colors.blue[800],
+                          ),
+                          onPressed: () {
+                            // send register request
+                            BlocProvider.of<AuthBloc>(context).add(
+                              AuthRegisterRequest(
+                                _usernameController.text,
+                                _passwordController.text,
+                                _passwordConfirmController.text,
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'ثبت نام',
+                            style: TextStyle(
+                              fontFamily: 'SB',
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      }
+                      if (state is AuthLoadingState) {
+                        return const CircularProgressIndicator(
+                          color: CustomColors.blueIndicator,
+                        );
+                      }
+                      if (state is AuthResponseState) {
+                        return Text(
+                          state.response.fold((l) => l, (r) => r),
+                          style: TextStyle(
+                            fontFamily: 'SB',
+                            color:
+                                state.response.isLeft()
+                                    ? CustomColors.red
+                                    : CustomColors.green,
+                            fontSize: 16,
+                          ),
+                        );
+                      }
+                      return const Text('خطای نامشخص');
+                    },
+                  ),
+                ],
               ),
             ],
           ),
