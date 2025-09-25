@@ -5,6 +5,7 @@ import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/register_screen.dart';
 import 'package:apple_shop_app/screens/welcome_screen.dart';
+import 'package:apple_shop_app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
@@ -271,24 +272,11 @@ class _ViewContainerState extends State<ViewContainer> {
                               (exceptionMessage) {
                                 widget._usernameController.clear();
                                 widget._passwordController.clear();
-                                var snackBar = SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  behavior: SnackBarBehavior.floating,
-                                  content: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: Text(
-                                      exceptionMessage,
-                                      style: const TextStyle(
-                                        fontFamily: 'SM',
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                                ScaffoldMessenger.of(
+                                AppSnackBar.showError(
                                   context,
-                                ).showSnackBar(snackBar);
+                                  exceptionMessage,
+                                  const Duration(seconds: 2),
+                                );
                               },
                               (successMessage) {
                                 Navigator.of(context).pushReplacement(
@@ -322,13 +310,23 @@ class _ViewContainerState extends State<ViewContainer> {
                                   backgroundColor: CustomColors.blue,
                                 ),
                                 onPressed: () {
-                                  // send login request
-                                  BlocProvider.of<AuthBloc>(context).add(
-                                    AuthLoginRequest(
-                                      widget._usernameController.text,
-                                      widget._passwordController.text,
-                                    ),
-                                  );
+                                  // empty badge check
+                                  if (widget._usernameController.text.isEmpty ||
+                                      widget._passwordController.text.isEmpty) {
+                                    AppSnackBar.showError(
+                                      context,
+                                      'نام کاربری یا رمز عبور خالی است!',
+                                      const Duration(seconds: 2),
+                                    );
+                                  } else {
+                                    // send login request
+                                    BlocProvider.of<AuthBloc>(context).add(
+                                      AuthLoginRequest(
+                                        widget._usernameController.text,
+                                        widget._passwordController.text,
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: const Text(
                                   'ورود به حساب',
@@ -373,13 +371,37 @@ class _ViewContainerState extends State<ViewContainer> {
                                       backgroundColor: CustomColors.blue,
                                     ),
                                     onPressed: () {
-                                      // send login request
-                                      BlocProvider.of<AuthBloc>(context).add(
-                                        AuthLoginRequest(
-                                          this.widget._usernameController.text,
-                                          this.widget._passwordController.text,
-                                        ),
-                                      );
+                                      // empty badge check
+                                      if (this
+                                              .widget
+                                              ._usernameController
+                                              .text
+                                              .isEmpty ||
+                                          this
+                                              .widget
+                                              ._passwordController
+                                              .text
+                                              .isEmpty) {
+                                        AppSnackBar.showError(
+                                          context,
+                                          'نام کاربری یا رمز عبور خالی است!',
+                                          const Duration(seconds: 2),
+                                        );
+                                      } else {
+                                        // send login request
+                                        BlocProvider.of<AuthBloc>(context).add(
+                                          AuthLoginRequest(
+                                            this
+                                                .widget
+                                                ._usernameController
+                                                .text,
+                                            this
+                                                .widget
+                                                ._passwordController
+                                                .text,
+                                          ),
+                                        );
+                                      }
                                     },
                                     child: const Text(
                                       'ورود به حساب',

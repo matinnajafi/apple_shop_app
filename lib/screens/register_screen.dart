@@ -6,6 +6,7 @@ import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/login_screen.dart';
 import 'package:apple_shop_app/screens/welcome_screen.dart';
 import 'package:apple_shop_app/util/application_rules.dart';
+import 'package:apple_shop_app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
@@ -395,24 +396,11 @@ class _ViewContainerState extends State<ViewContainer> {
                                 widget._usernameController.clear();
                                 widget._passwordController.clear();
                                 widget._passwordConfirmController.clear();
-                                var snackBar = SnackBar(
-                                  backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                  content: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: Text(
-                                      exceptionMessage,
-                                      style: const TextStyle(
-                                        fontFamily: 'SM',
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                                ScaffoldMessenger.of(
+                                AppSnackBar.showError(
                                   context,
-                                ).showSnackBar(snackBar);
+                                  exceptionMessage,
+                                  const Duration(seconds: 2),
+                                );
                               },
                               (successMessage) {
                                 Navigator.of(context).pushReplacement(
@@ -446,40 +434,42 @@ class _ViewContainerState extends State<ViewContainer> {
                                   backgroundColor:
                                       (_isAgreeWithRules)
                                           ? CustomColors.blue
+                                          // ignore: deprecated_member_use
                                           : CustomColors.blue.withOpacity(0.4),
                                 ),
                                 onPressed: () {
-                                  // just when agree with rules, user can register.
-                                  if (_isAgreeWithRules == false) {
-                                    var snackBar = SnackBar(
-                                      backgroundColor: Colors.red,
-                                      behavior: SnackBarBehavior.floating,
-                                      duration: Duration(milliseconds: 1500),
-                                      content: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: Text(
-                                          'شما هنوز با قوانین موافقت نکرده اید!',
-                                          style: const TextStyle(
-                                            fontFamily: 'SM',
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(
+                                  // empty badge check
+                                  if (widget._usernameController.text.isEmpty ||
+                                      widget._passwordController.text.isEmpty ||
+                                      widget
+                                          ._passwordConfirmController
+                                          .text
+                                          .isEmpty) {
+                                    AppSnackBar.showError(
                                       context,
-                                    ).showSnackBar(snackBar);
+                                      'موارد لازم برای ثبت نام را تکمیل کنید!',
+                                      const Duration(milliseconds: 1500),
+                                    );
                                     return;
                                   }
-                                  // send register request
-                                  BlocProvider.of<AuthBloc>(context).add(
-                                    AuthRegisterRequest(
-                                      widget._usernameController.text,
-                                      widget._passwordController.text,
-                                      widget._passwordConfirmController.text,
-                                    ),
-                                  );
+                                  if (_isAgreeWithRules) {
+                                    // send register request
+                                    BlocProvider.of<AuthBloc>(context).add(
+                                      AuthRegisterRequest(
+                                        widget._usernameController.text,
+                                        widget._passwordController.text,
+                                        widget._passwordConfirmController.text,
+                                      ),
+                                    );
+                                  } else {
+                                    // Enable registration only if the user agrees to the terms.
+                                    AppSnackBar.showError(
+                                      context,
+                                      'شما هنوز با قوانین موافقت نکرده اید!',
+                                      const Duration(milliseconds: 1500),
+                                    );
+                                    return;
+                                  }
                                 },
                                 child: const Text(
                                   'ثبت نام',
@@ -524,22 +514,61 @@ class _ViewContainerState extends State<ViewContainer> {
                                       backgroundColor:
                                           (_isAgreeWithRules)
                                               ? CustomColors.blue
+                                              // ignore: deprecated_member_use
                                               : CustomColors.blue.withOpacity(
                                                 0.4,
                                               ),
                                     ),
                                     onPressed: () {
-                                      // send register request
-                                      BlocProvider.of<AuthBloc>(context).add(
-                                        AuthRegisterRequest(
-                                          this.widget._usernameController.text,
-                                          this.widget._passwordController.text,
+                                      // empty badge check
+                                      if (this
+                                              .widget
+                                              ._usernameController
+                                              .text
+                                              .isEmpty ||
+                                          this
+                                              .widget
+                                              ._passwordController
+                                              .text
+                                              .isEmpty ||
                                           this
                                               .widget
                                               ._passwordConfirmController
-                                              .text,
-                                        ),
-                                      );
+                                              .text
+                                              .isEmpty) {
+                                        AppSnackBar.showError(
+                                          context,
+                                          'موارد لازم برای ثبت نام را تکمیل کنید!',
+                                          const Duration(milliseconds: 1500),
+                                        );
+                                        return;
+                                      }
+                                      if (_isAgreeWithRules) {
+                                        // send register request
+                                        BlocProvider.of<AuthBloc>(context).add(
+                                          AuthRegisterRequest(
+                                            this
+                                                .widget
+                                                ._usernameController
+                                                .text,
+                                            this
+                                                .widget
+                                                ._passwordController
+                                                .text,
+                                            this
+                                                .widget
+                                                ._passwordConfirmController
+                                                .text,
+                                          ),
+                                        );
+                                      } else {
+                                        // Enable registration only if the user agrees to the terms.
+                                        AppSnackBar.showError(
+                                          context,
+                                          'شما هنوز با قوانین موافقت نکرده اید!',
+                                          const Duration(milliseconds: 1500),
+                                        );
+                                      }
                                     },
                                     child: const Text(
                                       'ثبت نام',
