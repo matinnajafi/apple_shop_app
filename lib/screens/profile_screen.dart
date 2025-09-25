@@ -2,7 +2,7 @@ import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
-import 'package:apple_shop_app/screens/login_screen.dart';
+import 'package:apple_shop_app/screens/welcome_screen.dart';
 import 'package:apple_shop_app/util/auth_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             });
                             return authBloc;
                           },
-                          child: LoginScreen(),
+                          child: WelcomeScreen(),
                         );
                       },
                     ),
