@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         bottomNavigationBar: ClipRRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+            filter: ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
             child: BottomNavigationBar(
               onTap: (index) {
                 setState(() {
@@ -44,16 +44,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 });
               },
               currentIndex: selectedIndexbottomNavigationBar,
-              selectedLabelStyle: TextStyle(
+              selectedLabelStyle: const TextStyle(
                 fontFamily: 'SB',
                 fontSize: 12,
                 color: CustomColors.blue,
               ),
-              unselectedLabelStyle: TextStyle(
+              unselectedLabelStyle: const TextStyle(
                 fontFamily: 'SB',
                 fontSize: 12,
                 color: CustomColors.gery,
               ),
+              fixedColor: CustomColors.blueIndicator,
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -61,9 +62,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: Image.asset('assets/images/icon_profile.png'),
                   activeIcon: Container(
-                    margin: EdgeInsets.only(bottom: 3),
+                    margin: const EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: CustomColors.blue,
                           blurRadius: 20,
@@ -79,9 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: Image.asset('assets/images/icon_basket.png'),
                   activeIcon: Container(
-                    margin: EdgeInsets.only(bottom: 3),
+                    margin: const EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: CustomColors.blue,
                           blurRadius: 20,
@@ -97,9 +98,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: Image.asset('assets/images/icon_category.png'),
                   activeIcon: Container(
-                    margin: EdgeInsets.only(bottom: 3),
+                    margin: const EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: CustomColors.blue,
                           blurRadius: 20,
@@ -117,9 +118,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BottomNavigationBarItem(
                   icon: Image.asset('assets/images/icon_home.png'),
                   activeIcon: Container(
-                    margin: EdgeInsets.only(bottom: 3),
+                    margin: const EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: CustomColors.blue,
                           blurRadius: 20,
