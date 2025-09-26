@@ -36,39 +36,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
-                    child: Container(
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/icon_apple_blue.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.category.title ?? 'لیست محصولات',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: CustomColors.blue,
-                                  fontFamily: 'SB',
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: getCategoryTitleBadge(widget: widget),
                 ),
                 if (state is CategoryProductLoadingState) ...{
                   const SliverToBoxAdapter(child: LoadingAnimation()),
@@ -79,24 +47,41 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       return SliverToBoxAdapter(child: Text(exceptionMessage));
                     },
                     (productList) {
-                      return SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 44),
-                        sliver: SliverGrid(
-                          delegate: SliverChildBuilderDelegate((
-                            context,
-                            index,
-                          ) {
-                            return ProductItem(productList[index]);
-                          }, childCount: productList.length),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 20,
-                                crossAxisSpacing: 20,
-                                childAspectRatio: 2 / 2.8,
-                                crossAxisCount: 2,
+                      if (productList.isEmpty) {
+                        return const SliverToBoxAdapter(
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 25.0),
+                              child: Text(
+                                '!محصولی در این دسته‌بندی وجود ندارد',
+                                style: TextStyle(
+                                  fontFamily: 'SM',
+                                  fontSize: 14,
+                                ),
                               ),
-                        ),
-                      );
+                            ),
+                          ),
+                        );
+                      } else {
+                        return SliverPadding(
+                          padding: EdgeInsets.symmetric(horizontal: 44),
+                          sliver: SliverGrid(
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              return ProductItem(productList[index]);
+                            }, childCount: productList.length),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 20,
+                                  childAspectRatio: 2 / 2.8,
+                                  crossAxisCount: 2,
+                                ),
+                          ),
+                        );
+                      }
                     },
                   ),
                 },
@@ -105,6 +90,60 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+// ignore: camel_case_types
+class getCategoryTitleBadge extends StatelessWidget {
+  const getCategoryTitleBadge({super.key, required this.widget});
+
+  final ProductListScreen widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
+      child: Container(
+        height: 46,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/icon_apple_blue.png',
+                width: 24,
+                height: 24,
+              ),
+              Expanded(
+                child: Text(
+                  widget.category.title ?? 'لیست محصولات',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: CustomColors.blueIndicator,
+                    fontFamily: 'SB',
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Image.asset(
+                  'assets/images/icon_back.png',
+                  width: 24,
+                  height: 24,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
