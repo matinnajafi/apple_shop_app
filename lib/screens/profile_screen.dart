@@ -1,12 +1,7 @@
-import 'package:apple_shop_app/bloc/authentication/auth_bloc.dart';
-import 'package:apple_shop_app/bloc/authentication/auth_state.dart';
 import 'package:apple_shop_app/constants/custom_colors.dart';
-import 'package:apple_shop_app/screens/dashboard_screen.dart';
-import 'package:apple_shop_app/screens/welcome_screen.dart';
-import 'package:apple_shop_app/util/auth_manager.dart';
+import 'package:apple_shop_app/widgets/logout_textbutton.dart';
 import 'package:apple_shop_app/widgets/setting_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -120,63 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: CustomColors.gery,
               ),
             ),
-            SizedBox(
-              height: 36,
-              child: TextButton(
-                style: TextButton.styleFrom(overlayColor: CustomColors.red),
-                onPressed: () {
-                  AuthManager.logout();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return BlocProvider(
-                          create: (context) {
-                            var authBloc = AuthBloc();
-                            authBloc.stream.forEach((state) {
-                              if (state is AuthResponseState) {
-                                state.response.fold(
-                                  (exceptionMessage) {
-                                    Text('Error: $exceptionMessage');
-                                  },
-                                  (successMessage) {
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                const DashboardScreen(),
-                                      ),
-                                    );
-                                    // globalNavigatorKey.currentState
-                                    //     ?.pushReplacement(
-                                    //       MaterialPageRoute(
-                                    //         builder:
-                                    //             (context) =>
-                                    //                 const DashboardScreen(),
-                                    //       ),
-                                    //     );
-                                  },
-                                );
-                              }
-                            });
-                            return authBloc;
-                          },
-                          child: WelcomeScreen(),
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: Text(
-                  'خروج از حساب کاربری',
-                  style: TextStyle(
-                    fontFamily: 'SM',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ),
-            ),
+            const LogoutTextButton(),
           ],
         ),
       ),
