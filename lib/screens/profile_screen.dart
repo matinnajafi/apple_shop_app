@@ -4,6 +4,7 @@ import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/screens/dashboard_screen.dart';
 import 'package:apple_shop_app/screens/welcome_screen.dart';
 import 'package:apple_shop_app/util/auth_manager.dart';
+import 'package:apple_shop_app/widgets/setting_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,16 +73,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runSpacing: 20,
                 spacing: 14,
                 children: const [
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
-                  // CategoryItemChip(),
+                  SettingItem(title: 'علاقه‌مندی‌ها', icon: Icons.favorite),
+                  SettingItem(title: 'آدرس ها', icon: Icons.location_pin),
+                  SettingItem(
+                    title: 'سفارشات',
+                    icon: Icons.shopping_bag_rounded,
+                  ),
+                  SettingItem(title: 'تنظیمات', icon: Icons.settings_rounded),
+                  SettingItem(
+                    title: 'اطلاعیه ها',
+                    icon: Icons.notifications_active_rounded,
+                  ),
+                  SettingItem(title: 'رهگیری', icon: Icons.fire_truck_rounded),
+                  SettingItem(
+                    title: 'تخفیف ها',
+                    icon: Icons.local_offer_rounded,
+                  ),
+                  SettingItem(title: 'نقد و نظرات', icon: Icons.star_rounded),
+                  SettingItem(title: 'پشتیبانی', icon: Icons.comment_rounded),
+                  SettingItem(title: 'بلاگ', icon: Icons.web),
                 ],
               ),
             ),
