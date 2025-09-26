@@ -19,7 +19,9 @@ import 'package:apple_shop_app/data/model/variant.dart';
 import 'package:apple_shop_app/data/model/variant_type.dart';
 import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
+import 'package:apple_shop_app/util/extentions/int_extensions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
+import 'package:apple_shop_app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -175,6 +177,7 @@ class DetailsContentWidget extends StatelessWidget {
                         return _getGalleryWidget(
                           productImageList,
                           parentWidget.product.thumbnail,
+                          parentWidget.product.quantity,
                         );
                       },
                     ),
@@ -276,65 +279,31 @@ class DetailsContentWidget extends StatelessWidget {
                               Stack(
                                 clipBehavior: Clip.none,
                                 children: [
-                                  Positioned(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      height: 26,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: CustomColors.blue,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  ),
+                                  Positioned(child: getCommentAvatar()),
                                   Positioned(
                                     right: 15,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      height: 26,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: CustomColors.red,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
+                                    child: getCommentAvatar(),
                                   ),
                                   Positioned(
                                     right: 30,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      height: 26,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: CustomColors.green,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
+                                    child: getCommentAvatar(),
                                   ),
                                   Positioned(
                                     right: 45,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      height: 26,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
+                                    child: getCommentAvatar(),
                                   ),
                                   Positioned(
-                                    right: 60,
+                                    right: 58,
                                     child: Container(
                                       margin: const EdgeInsets.only(left: 10),
                                       height: 26,
                                       width: 26,
                                       decoration: BoxDecoration(
-                                        color: CustomColors.gery,
-                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(34),
                                       ),
                                       child: Center(
-                                        child: Text(
+                                        child: const Text(
                                           '+10',
                                           style: TextStyle(
                                             color: Colors.white,
@@ -360,16 +329,15 @@ class DetailsContentWidget extends StatelessWidget {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        left: 44,
-                        right: 44,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 44,
+                        vertical: 22,
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          PriceTagButton(),
+                          PriceTagButton(parentWidget.product),
                           AddButtonToBasket(parentWidget.product),
                         ],
                       ),
@@ -380,6 +348,24 @@ class DetailsContentWidget extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class getCommentAvatar extends StatelessWidget {
+  const getCommentAvatar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 10),
+      height: 26,
+      width: 26,
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Image.asset('assets/images/avatar.png'),
       ),
     );
   }
@@ -620,15 +606,10 @@ class _getProductPropertiesState extends State<getProductProperties> {
                 if (_tapCount >= 6) {
                   ScaffoldMessenger.of(context).clearSnackBars();
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        '!برای این محصول مشخصاتی ثبت نشده',
-                        textAlign: TextAlign.right,
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(seconds: 3),
-                    ),
+                  AppSnackBar.showMessage(
+                    context,
+                    'برای این محصول مشخصاتی ثبت نشده!',
+                    Duration(seconds: 3),
                   );
                 }
                 // todo: end
@@ -1012,10 +993,12 @@ class _getGalleryWidget extends StatefulWidget {
   List<Productimage> productImageList;
   String defaultProductThumbnail;
   int selectedItem = 0;
+  int quantity;
   // ignore: unused_element_parameter
   _getGalleryWidget(
     this.productImageList,
-    this.defaultProductThumbnail, {
+    this.defaultProductThumbnail,
+    this.quantity, {
     // ignore: unused_element_parameter
     super.key,
   });
@@ -1026,18 +1009,19 @@ class _getGalleryWidget extends StatefulWidget {
 
 // ignore: camel_case_types
 class _getGalleryWidgetState extends State<_getGalleryWidget> {
+  bool isFavorite = false;
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 44),
+        margin: EdgeInsets.only(right: 44, left: 44, bottom: 14),
         height: 284,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
               color: CustomColors.gery,
-              blurRadius: 40,
-              spreadRadius: -24,
+              blurRadius: 34,
+              spreadRadius: -36,
               offset: Offset(0.0, 24.0),
             ),
           ],
@@ -1052,42 +1036,71 @@ class _getGalleryWidgetState extends State<_getGalleryWidget> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/icon_star.png',
-                          width: 24,
-                          height: 24,
-                        ),
-                        const SizedBox(width: 2),
-                        const Text(
-                          '4.6',
-                          style: TextStyle(fontFamily: 'SM', fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    SizedBox(
-                      height: 200,
-                      width: 200,
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: CachedImage(
-                          radius: 4.0,
-                          imageUrl:
-                              (widget.productImageList.isEmpty)
-                                  ? (widget.defaultProductThumbnail)
-                                  : (widget
-                                      .productImageList[widget.selectedItem]
-                                      .imageUrl),
-                        ),
+                    Expanded(
+                      child: Stack(
+                        alignment: AlignmentDirectional.topCenter,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 24.0),
+                            height: 140,
+                            width: 140,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Center(
+                                child: CachedImage(
+                                  radius: 4.0,
+                                  imageUrl:
+                                      (widget.productImageList.isEmpty)
+                                          ? (widget.defaultProductThumbnail)
+                                          : (widget
+                                              .productImageList[widget
+                                                  .selectedItem]
+                                              .imageUrl),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/icon_star.png',
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                (widget.quantity >= 100)
+                                    ? '+100'
+                                    : widget.quantity.toString(),
+                                style: TextStyle(
+                                  fontFamily: 'SM',
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isFavorite = !isFavorite;
+                                  });
+                                },
+                                child:
+                                    (isFavorite)
+                                        ? Image.asset(
+                                          'assets/images/active_fav_product.png',
+                                          width: 24,
+                                          height: 24,
+                                        )
+                                        : Image.asset(
+                                          'assets/images/icon_favorite_deactive.png',
+                                          width: 24,
+                                          height: 24,
+                                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    const Spacer(),
-                    Image.asset(
-                      'assets/images/icon_favorite_deactive.png',
-                      width: 24,
-                      height: 24,
                     ),
                   ],
                 ),
@@ -1154,33 +1167,38 @@ class AddButtonToBasket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.bottomCenter,
-      children: [
-        Container(
-          height: 58,
-          width: 140,
-          decoration: BoxDecoration(
-            color: CustomColors.blue,
-            borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () {
+        // show message to user know this product added
+        AppSnackBar.showMessage(
+          context,
+          'محصول به سبد شما اضافه شد.',
+          color: Colors.green,
+          Duration(seconds: 2),
+        );
+        // event for add product to shopping basket (in card screen)
+        context.read<ProductBloc>().add(AddProductToBasketEvent(product));
+        // event for update card screen
+        context.read<BasketBloc>().add(BasketFetchFromHiveEvent());
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          Container(
+            height: 58,
+            width: 130,
+            decoration: BoxDecoration(
+              color: CustomColors.blue,
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: GestureDetector(
-              onTap: () {
-                // event for add product to shopping basket (in card screen)
-                context.read<ProductBloc>().add(
-                  AddProductToBasketEvent(product),
-                );
-                // event for update card screen
-                context.read<BasketBloc>().add(BasketFetchFromHiveEvent());
-              },
-              child: SizedBox(
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: const SizedBox(
                 height: 53,
-                width: 160,
+                width: 155,
                 child: Center(
                   child: Text(
                     'افزودن سبد خرید',
@@ -1194,102 +1212,108 @@ class AddButtonToBasket extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
+// ignore: must_be_immutable
 class PriceTagButton extends StatelessWidget {
-  const PriceTagButton({super.key});
+  Product product;
+  PriceTagButton(this.product, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.bottomCenter,
-      children: [
-        Container(
-          height: 58,
-          width: 140,
-          decoration: BoxDecoration(
-            color: CustomColors.green,
-            borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () {
+        // navigate to zarinpal payment with product price and product name
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          Container(
+            height: 58,
+            width: 130,
+            decoration: BoxDecoration(
+              color: CustomColors.green,
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: SizedBox(
-              height: 53,
-              width: 160,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'تومان',
-                      style: TextStyle(
-                        fontFamily: 'SM',
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          '15,000,000',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.lineThrough,
-                            fontFamily: 'SM',
-                            fontSize: 12,
-                          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: SizedBox(
+                height: 53,
+                width: 155,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'تومان',
+                        style: TextStyle(
+                          fontFamily: 'SM',
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
-                        Text(
-                          '12,000,000',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'SM',
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Container(
-                      height: 18,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: Text(
-                            '3%',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontFamily: 'SB',
+                      const SizedBox(width: 5),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.price.convertToPrice(),
+                            style: const TextStyle(
                               color: Colors.white,
+                              decoration: TextDecoration.lineThrough,
+                              fontFamily: 'SM',
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            product.realPrice.convertToPrice(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'SM',
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Container(
+                        height: 18,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: Text(
+                              '${product.percent?.round() ?? 0}%',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontFamily: 'SB',
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

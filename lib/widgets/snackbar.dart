@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppSnackBar {
-  // A static method to show a custom error SnackBar
-  static void showError(
+  // A static method to show a custom SnackBar
+  static void showMessage(
     BuildContext context,
     String message,
-    Duration duration,
-  ) {
+    Duration duration, {
+    Color color = Colors.redAccent,
+  }) {
     final snackBar = SnackBar(
-      backgroundColor: Colors.redAccent,
+      // Use the provided color or the default Colors.redAccent
+      backgroundColor: color,
       behavior: SnackBarBehavior.floating,
       duration: duration, // set a duration
       content: Directionality(

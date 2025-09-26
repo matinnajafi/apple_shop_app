@@ -272,7 +272,7 @@ class _ViewContainerState extends State<ViewContainer> {
                               (exceptionMessage) {
                                 widget._usernameController.clear();
                                 widget._passwordController.clear();
-                                AppSnackBar.showError(
+                                AppSnackBar.showMessage(
                                   context,
                                   exceptionMessage,
                                   const Duration(seconds: 2),
@@ -313,7 +313,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                   // empty badge check
                                   if (widget._usernameController.text.isEmpty ||
                                       widget._passwordController.text.isEmpty) {
-                                    AppSnackBar.showError(
+                                    AppSnackBar.showMessage(
                                       context,
                                       'نام کاربری یا رمز عبور خالی است!',
                                       const Duration(seconds: 2),
@@ -382,7 +382,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                               ._passwordController
                                               .text
                                               .isEmpty) {
-                                        AppSnackBar.showError(
+                                        AppSnackBar.showMessage(
                                           context,
                                           'نام کاربری یا رمز عبور خالی است!',
                                           const Duration(seconds: 2),

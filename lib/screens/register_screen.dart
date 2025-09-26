@@ -396,7 +396,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                 widget._usernameController.clear();
                                 widget._passwordController.clear();
                                 widget._passwordConfirmController.clear();
-                                AppSnackBar.showError(
+                                AppSnackBar.showMessage(
                                   context,
                                   exceptionMessage,
                                   const Duration(seconds: 2),
@@ -445,7 +445,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                           ._passwordConfirmController
                                           .text
                                           .isEmpty) {
-                                    AppSnackBar.showError(
+                                    AppSnackBar.showMessage(
                                       context,
                                       'موارد لازم برای ثبت نام را تکمیل کنید!',
                                       const Duration(milliseconds: 1500),
@@ -463,7 +463,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                     );
                                   } else {
                                     // Enable registration only if the user agrees to the terms.
-                                    AppSnackBar.showError(
+                                    AppSnackBar.showMessage(
                                       context,
                                       'شما هنوز با قوانین موافقت نکرده اید!',
                                       const Duration(milliseconds: 1500),
@@ -536,7 +536,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                               ._passwordConfirmController
                                               .text
                                               .isEmpty) {
-                                        AppSnackBar.showError(
+                                        AppSnackBar.showMessage(
                                           context,
                                           'موارد لازم برای ثبت نام را تکمیل کنید!',
                                           const Duration(milliseconds: 1500),
@@ -563,7 +563,7 @@ class _ViewContainerState extends State<ViewContainer> {
                                         );
                                       } else {
                                         // Enable registration only if the user agrees to the terms.
-                                        AppSnackBar.showError(
+                                        AppSnackBar.showMessage(
                                           context,
                                           'شما هنوز با قوانین موافقت نکرده اید!',
                                           const Duration(milliseconds: 1500),
