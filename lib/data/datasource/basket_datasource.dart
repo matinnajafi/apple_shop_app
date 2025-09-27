@@ -1,4 +1,5 @@
 import 'package:apple_shop_app/data/model/basket_item.dart';
+import 'package:apple_shop_app/data/model/product.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 abstract class IBasketDatasource {
@@ -6,6 +7,8 @@ abstract class IBasketDatasource {
   Future<List<BasketItem>> getAllBasketItems();
   Future<int> getBasketFinalPrice();
   Future<void> removeProductFromBasket(int index);
+  Future<Product> buySingleProduct(Product product);
+  Future<int> getProductPrice(Product product);
 }
 
 class BasketLocalDatasource extends IBasketDatasource {
@@ -34,5 +37,15 @@ class BasketLocalDatasource extends IBasketDatasource {
   @override
   Future<void> removeProductFromBasket(int index) async {
     box.deleteAt(index);
+  }
+
+  @override
+  Future<Product> buySingleProduct(Product product) async {
+    return product;
+  }
+
+  @override
+  Future<int> getProductPrice(Product product) {
+    return Future.value(product.realPrice ?? 0);
   }
 }

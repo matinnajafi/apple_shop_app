@@ -1227,7 +1227,17 @@ class PriceTagButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // navigate to zarinpal payment with product price and product name
+        // show snack bar until user goes to payment page
+        AppSnackBar.showMessage(
+          context,
+          'در حال انتقال به صفحه پرداخت...',
+          color: Colors.grey.shade700,
+          Duration(seconds: 4),
+        );
+        // Event for Initialize Payment
+        context.read<BasketBloc>().add(ProductPaymentInitEvent(product));
+        // Event for Request Payment
+        context.read<BasketBloc>().add(ProductPaymentRequestEvent());
       },
       child: Stack(
         alignment: AlignmentDirectional.bottomCenter,

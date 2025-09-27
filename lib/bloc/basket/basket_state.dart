@@ -10,3 +10,5 @@ class BasketDataFetchedState extends BasketState {
   int basketFinalPrice;
   BasketDataFetchedState(this.basketItemList, this.basketFinalPrice);
 }
+
+class BuySingleProductInitState extends BasketState {}
