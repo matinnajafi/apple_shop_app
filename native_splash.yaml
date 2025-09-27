@@ -1,0 +1,19 @@
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  # Light mode configuration
+  color: "EEEEEE"
+  image: "assets/logos/logo_black.png"
+
+  # Dark mode configuration
+  color_dark: "283593"  # Equivalent to Colors.grey.shade900
+  image_dark: "assets/logos/logo_white.png" 
+
+  # Android 12 configuration
+  android_12:
+    color: "EEEEEE"
+    image: "assets/logos/logo_black.png"
+    color_dark: "283593" 
+    image_dark: "assets/logos/logo_white.png" 
