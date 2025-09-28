@@ -6,6 +6,7 @@ import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/category.dart';
 import 'package:apple_shop_app/screens/product_list_screen.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
+import 'package:apple_shop_app/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,40 +31,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
-                child: Container(
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/icon_apple_blue.png',
-                          width: 24,
-                          height: 24,
-                        ),
-                        Expanded(
-                          child: Text(
-                            'دسته بندی',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: CustomColors.blue,
-                              fontFamily: 'SB',
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            const SliverToBoxAdapter(
+              child: CustomAppbar('دسته بندی', isSubpage: false),
             ),
             BlocBuilder<CategoryBloc, CategoryState>(
               builder: (context, state) {
@@ -103,6 +72,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 return SliverToBoxAdapter(child: Text('error'));
               },
             ),
+            const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:apple_shop_app/data/model/basket_item.dart';
 import 'package:apple_shop_app/util/extentions/int_extensions.dart';
 import 'package:apple_shop_app/util/extentions/string_extentions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
+import 'package:apple_shop_app/widgets/custom_appbar.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,44 +27,8 @@ class CartScreen extends StatelessWidget {
                 CustomScrollView(
                   physics: BouncingScrollPhysics(),
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 44,
-                          right: 44,
-                          bottom: 32,
-                        ),
-                        child: Container(
-                          height: 46,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/icon_apple_blue.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                                Expanded(
-                                  child: const Text(
-                                    'سبد خرید',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: CustomColors.blue,
-                                      fontFamily: 'SB',
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    const SliverToBoxAdapter(
+                      child: CustomAppbar('سبد خرید', isSubpage: false),
                     ),
                     if (state is BasketDataFetchedState) ...{
                       state.basketItemList.fold(
@@ -90,9 +55,9 @@ class CartScreen extends StatelessWidget {
                 if (state is BasketDataFetchedState) ...{
                   Padding(
                     padding: const EdgeInsets.only(
-                      right: 44,
-                      left: 44,
-                      bottom: 10,
+                      right: 24,
+                      left: 24,
+                      bottom: 16,
                     ),
                     child: SizedBox(
                       height: 53,

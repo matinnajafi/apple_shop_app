@@ -21,6 +21,7 @@ import 'package:apple_shop_app/di/di.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
 import 'package:apple_shop_app/util/extentions/int_extensions.dart';
 import 'package:apple_shop_app/widgets/cached_image.dart';
+import 'package:apple_shop_app/widgets/custom_appbar.dart';
 import 'package:apple_shop_app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,75 +71,22 @@ class DetailsContentWidget extends StatelessWidget {
                 if (state is ProductDetailLoadingState) ...{
                   const SliverToBoxAdapter(child: LoadingAnimation()),
                 } else ...{
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 44,
-                        right: 44,
-                        bottom: 32,
-                      ),
-                      child: Container(
-                        height: 46,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/icon_apple_blue.png',
-                                width: 24,
-                                height: 24,
-                              ),
-                              if (state is ProductDetailResponseState) ...{
-                                state.productCategory.fold(
-                                  (exceptionMessage) {
-                                    return Expanded(
-                                      child: Text(
-                                        'جزئیات محصول',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: CustomColors.blue,
-                                          fontFamily: 'SB',
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  (productCategory) {
-                                    return Expanded(
-                                      child: Text(
-                                        productCategory.title ?? 'محصول',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: CustomColors.blue,
-                                          fontFamily: 'SB',
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              },
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Image.asset(
-                                  'assets/images/icon_back.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   if (state is ProductDetailResponseState) ...{
+                    state.productCategory.fold(
+                      (exceptionMessage) {
+                        return const SliverToBoxAdapter(
+                          child: CustomAppbar('جزئیات محصول', isSubpage: true),
+                        );
+                      },
+                      (productCategory) {
+                        return SliverToBoxAdapter(
+                          child: CustomAppbar(
+                            productCategory.title!,
+                            isSubpage: true,
+                          ),
+                        );
+                      },
+                    ),
                     state.productName.fold(
                       (exceptionMessage) {
                         return SliverToBoxAdapter(

@@ -207,7 +207,7 @@ class _getAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
+        padding: EdgeInsets.only(right: 44, left: 44, top: 22, bottom: 28),
         child: Container(
           height: 46,
           decoration: BoxDecoration(
@@ -220,10 +220,10 @@ class _getAppbar extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/images/icon_search.png',
-                  width: 24,
-                  height: 24,
+                  width: 20,
+                  height: 20,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'جستوجوی محصولات',

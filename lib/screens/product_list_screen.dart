@@ -4,6 +4,7 @@ import 'package:apple_shop_app/bloc/categoryProduct/category_product_state.dart'
 import 'package:apple_shop_app/constants/custom_colors.dart';
 import 'package:apple_shop_app/data/model/category.dart';
 import 'package:apple_shop_app/screens/home_screen.dart';
+import 'package:apple_shop_app/widgets/custom_appbar.dart';
 import 'package:apple_shop_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: getCategoryTitleBadge(widget: widget),
+                  child: CustomAppbar(
+                    widget.category.title ?? 'لیست محصولات',
+                    isSubpage: true,
+                  ),
                 ),
                 if (state is CategoryProductLoadingState) ...{
                   const SliverToBoxAdapter(child: LoadingAnimation()),
@@ -90,60 +94,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
         );
       },
-    );
-  }
-}
-
-// ignore: camel_case_types
-class getCategoryTitleBadge extends StatelessWidget {
-  const getCategoryTitleBadge({super.key, required this.widget});
-
-  final ProductListScreen widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 44, right: 44, bottom: 32),
-      child: Container(
-        height: 46,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/images/icon_apple_blue.png',
-                width: 24,
-                height: 24,
-              ),
-              Expanded(
-                child: Text(
-                  widget.category.title ?? 'لیست محصولات',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: CustomColors.blueIndicator,
-                    fontFamily: 'SB',
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Image.asset(
-                  'assets/images/icon_back.png',
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
