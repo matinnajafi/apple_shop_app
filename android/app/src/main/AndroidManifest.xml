@@ -1,11 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.apple_shop_app">
 
+    <!-- ✅ Internet permission for API access -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="apple_shop_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        android:usesCleartextTraffic="true"> <!-- ✅ Allow HTTP if needed -->
 
         <!-- Disable Impeller to avoid GL command errors in emulator -->
         <meta-data
@@ -22,10 +26,7 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
 
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
+            <!-- Specifies an Android theme to apply to this Activity -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -34,16 +35,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <!-- Deep Link sample -->
-<intent-filter>
-    <action android:name="android.intent.action.VIEW" />
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
-    <!-- Add optional android:host to distinguish your app
-          from others in case of conflicting scheme name -->
-    <data android:scheme="expertflutter" android:host="shop" />
-    <!-- <data android:scheme="sample" /> -->
-</intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="expertflutter" android:host="shop" />
+            </intent-filter>
         </activity>
 
         <!-- Required by Flutter tool -->
