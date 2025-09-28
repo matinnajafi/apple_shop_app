@@ -1,16 +1,25 @@
-# apple_shop_app
+# Apple Shop
 
-A new Flutter project.
+## 🛍️ Project Overview
 
-## Getting Started
+This is a modern online Apple shop application built with Flutter, offering a seamless shopping experience with a polished UI and robust backend integration.
 
-This project is a starting point for a Flutter application.
+## 🔧 Technical Highlights
 
-A few resources to get you started if this is your first Flutter project:
+- Uses RESTful APIs to fetch dynamic product data and manage user interactions  
+- Implements Zarinpal payment gateway for secure and localized transactions  
+- Built with a clean architecture and BLoC for scalable state management  
+- Features login and registration flows with proper validation and user feedback  
+- Applies dependency injection for better modularity and testability  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🎨 Design & UX
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The app is designed with a strong focus on user experience, featuring intuitive navigation, responsive layouts, and visually appealing components. Every detail—from typography to dialog transitions—has been carefully crafted to ensure clarity and comfort.
+
+
+![image alt](https://github.com/matinnajafi/apple_shop_app/blob/main/apple_shop_banner.png?raw=true)
+
+
+## 🧼 Code Quality
+
+This project emphasizes clean code practices, separation of concerns, and maintainable structure. It’s a great reference for developers looking to build scalable Flutter apps with professional standards.
